@@ -17,8 +17,9 @@
 # 🏡서비스 소개
 
 ## UCC 🎞️
+[[ SSAFY 10기 자율프로젝트 ] 가족 소통 통합 관리 서비스 - '가티(Gatee)'](https://youtu.be/jY7TfR6VFlQ)
 
-- [![Video Label](http://img.youtube.com/vi/jY7TfR6VFlQ/0.jpg)](https://youtu.be/jY7TfR6VFlQ)
+[![Video Label](http://img.youtube.com/vi/jY7TfR6VFlQ/0.jpg)](https://youtu.be/jY7TfR6VFlQ)
 
 <br />
 
@@ -246,7 +247,6 @@
 > 
 
 - 사용자가 업로드하는 사진들을 크롭하여 S3에 저장하고 관리합니다.
-- 사진 로드하거나 업로드할때 s3에 활용하는거 좀 더 추가
 
 
 
