@@ -1,22 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useOutletContext} from "react-router-dom";
-import {FaPlus} from "react-icons/fa6";
-import {GroupPhotoItemProps, PhotoOutletInfoContext, PlusAlbumButton} from "@type/index";
-import Checkbox from "@mui/material/Checkbox";
 import {AlbumNameInputModal} from "@pages/photo/components/CreateAlbumModal";
-import useModal from "@hooks/useModal";
-import {useModalStore} from "@store/useModalStore";
+import {GroupPhotoItemProps, PhotoOutletInfoContext, PlusAlbumButton} from "@type/index";
 import {getAlbumListPhotoApi} from "@api/photo";
+import {useModalStore} from "@store/useModalStore";
 import {useFamilyStore} from "@store/useFamilyStore";
 import {usePhotoStore} from "@store/usePhotoStore";
+import useModal from "@hooks/useModal";
+import Checkbox from "@mui/material/Checkbox";
+import {FaPlus} from "react-icons/fa6";
 
 
 const PhotoAlbum = () => {
   const {editMode, handleChecked} = useOutletContext<PhotoOutletInfoContext>();
-  // 모달 상태
-  const {setShowModal} = useModalStore()
-  const {familyId} = useFamilyStore()
-  const {albumList, setAlbumList} = usePhotoStore()
+  const {setShowModal} = useModalStore();
+  const {familyId} = useFamilyStore();
+  const {albumList, setAlbumList} = usePhotoStore();
 
   // 앨범 이름 고르기 모달 상태
   const {
@@ -28,15 +27,13 @@ const PhotoAlbum = () => {
   // 앨범 이름 모달 띄우기
   const handleModal = () => {
     setShowModal(true);
-    openAlbumNameInputModal()
-    console.log("모달 팝업")
+    openAlbumNameInputModal();
   }
 
   // 앨범이름 모달 닫기
   const handleCloseAlbumNameInputModal = () => {
-    closeAlbumNameInputModal()
-    setShowModal(false)
-    console.log('앨범 만들기')
+    closeAlbumNameInputModal();
+    setShowModal(false);
   }
 
   // 앨범 목록 불러오기 api
@@ -44,17 +41,16 @@ const PhotoAlbum = () => {
     getAlbumListPhotoApi(
       {familyId: familyId},
       res => {
-        console.log(res)
-        setAlbumList(res.data)
+        setAlbumList(res.data);
       },
       err => {
-        console.log(err)
+        console.log(err);
       }
     )
   }
 
   useEffect(() => {
-    getAlbumListPhotoApiFunc()
+    getAlbumListPhotoApiFunc();
   }, []);
 
   return (
@@ -76,23 +72,25 @@ const PhotoAlbum = () => {
 const GroupItem = ({editMode, handleChecked, groupPhotoData}: PhotoOutletInfoContext & GroupPhotoItemProps) => {
   const label = {inputProps: {'aria-label': 'Checkbox demo'}};
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState<boolean>(false);
+
   const gotoDetail = () => {
     if (editMode === 'normal') {
       navigate(`/photo/album/${groupPhotoData.albumId}/${groupPhotoData.name}`);
     }
   };
+
   // 체크박스 변동 함수
   const handleCheckBox = () => {
-    // 체크박스가 체크 되어있다면 리스트에서 albumId를 제거하고 체크를 푼다
+    // 체크박스가 체크 되어있다면 리스트에서 albumId를 제거하고 체크를 풂
     if (checked) {
-      handleChecked(groupPhotoData.albumId, "delete")
-      setChecked(false)
+      handleChecked(groupPhotoData.albumId, "delete");
+      setChecked(false);
     }
-    // 체크박스가 체크 되어있지 않다면, 리스트에 albumId를 추가하고 체크를 한다
+    // 체크박스가 체크 되어있지 않다면, 리스트에 albumId를 추가하고 체크
     else {
-      handleChecked(groupPhotoData.albumId, "add")
-      setChecked(true)
+      handleChecked(groupPhotoData.albumId, "add");
+      setChecked(true);
     }
   }
   return (
@@ -114,7 +112,6 @@ const GroupItem = ({editMode, handleChecked, groupPhotoData}: PhotoOutletInfoCon
 
 
 const PlusAlbum = ({handleModal}: PlusAlbumButton) => {
-
   return (
     <div className="photo-group--item--container">
       {/* 배경 사진 */}

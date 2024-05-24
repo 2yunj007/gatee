@@ -1,37 +1,31 @@
 import React, {useState, useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
+import Slider from "react-slick";
+
 import FirstExam from "@pages/onboarding/components/FirstExam";
 import SecondDict from "@pages/onboarding/components/SecondDict";
 import ThirdAll from "@pages/onboarding/components/ThirdAll";
-import Slider from "react-slick";
 import KaKaoLogin from "@pages/onboarding/components/KaKaoLogin";
-import * as events from "node:events";
-import {isBoolean} from "@craco/craco/dist/lib/utils";
-import {useNavigate} from "react-router-dom";
-// import {useMemberStore} from "@store/useMemberStore";
-// import axios from "axios";
-import Ios from "@pages/onboarding/components/Ios"
-import Android from "@pages/onboarding/components/Android"
+import Ios from "@pages/onboarding/components/Ios";
+import Android from "@pages/onboarding/components/Android";
+import {getMyDataApi} from "@api/member";
 import {useModalStore} from "@store/useModalStore";
+
 import Box from "@mui/material/Box";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import {getMyDataApi} from "@api/member";
-// import {BeforeInstallPromptEvent} from '@type/index';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 // 공식 문서 : https://react-slick.neostack.com/docs/api
 const OnboardingIndex = () => {
-  // const [oldSlide, setOldSlide] = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
-  // const [activeSlide2, setActiveSlide2] = useState(0);
+  const [activeSlide, setActiveSlide] = useState<number>(0);
   const navigate = useNavigate();
+  const accessToken: string | null = localStorage.getItem("accessToken");
 
-  const accessToken = localStorage.getItem("accessToken");
-
-  //토큰이 있는 경우 메인으로 보내줌
+  //토큰이 있는 경우 메인으로 보내 줌
   useEffect(() => {
     if (accessToken) {
-      // 내정보 조회하고 있으면 메인 없으면 카카오로
+      // 내 정보 조회하고 있으면 메인 없으면 카카오로
       getMyDataApi(res => {
         navigate("/main");
       }, err => {
@@ -42,8 +36,8 @@ const OnboardingIndex = () => {
   }, []);
 
 
-  const [visible, setVisible] = useState(true)
-  const [deviceType, setDeviceType] = useState('unknown');
+  const [visible, setVisible] = useState<boolean>(true)
+  const [deviceType, setDeviceType] = useState<string>('unknown');
 
 
   // 기기 파악

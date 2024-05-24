@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { IoIosCamera } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { useFamilyStore } from "@store/useFamilyStore";
+import React, {useRef, useState, useEffect} from 'react';
+import {IoIosCamera} from "react-icons/io";
+import {useNavigate} from "react-router-dom";
+import {useFamilyStore} from "@store/useFamilyStore";
 import basicFamily from "@assets/images/profile/family.jpg";
 import ProfileCropper from "@pages/profile/components/Cropper";
 import useModal from "@hooks/useModal";
-import { imageResizer } from "@utils/imageResizer";
+import {imageResizer} from "@utils/imageResizer";
 import base64 from "base-64";
 import {PiCaretLeft} from "react-icons/pi";
 
@@ -15,8 +15,8 @@ const SignupFamilySet = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sender: string = "family-set"
   const accessToken: string | null = localStorage.getItem("accessToken");
-  const { familyName, setFamilyName, setFamilyImage, stringImage, setStringImage } = useFamilyStore();
-  const { isOpen, openModal, closeModal } = useModal();
+  const {familyName, setFamilyName, setFamilyImage, stringImage, setStringImage} = useFamilyStore();
+  const {isOpen, openModal, closeModal} = useModal();
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [cropImage, setCropImage] = useState<string>("");
@@ -28,12 +28,11 @@ const SignupFamilySet = () => {
 
     // 권한에 따라 redirect
     if (accessToken) {
-      const payload: string = accessToken.substring(accessToken.indexOf('.')+1,accessToken.lastIndexOf('.'));
+      const payload: string = accessToken.substring(accessToken.indexOf('.') + 1, accessToken.lastIndexOf('.'));
       const decode = base64.decode(payload);
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
-        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       }
     }
@@ -49,14 +48,16 @@ const SignupFamilySet = () => {
   }
 
   // 이미지 선택 처리
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>)=> {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | null = e.target.files ? e.target.files[0] : null;
     if (file) {
       const resizedFile: File = (await imageResizer(file, 2000, 2000)) as File;
+
       // 크롭할 이미지 넣기
       const jpgUrl = URL.createObjectURL(resizedFile);
 
       setCropImage(jpgUrl);
+
       // 모달 열기
       openModal();
     }
@@ -74,7 +75,8 @@ const SignupFamilySet = () => {
     // 입력값 검증
     if (familyName.length < 1 || familyName.length > 6 || !/^[가-힣]*$/.test(familyName)) {
       // 오류 메시지 설정
-      setErrorMessage("한글로 1~6글자를 입력해주세요.");
+      setErrorMessage("한글 1~6자를 입력해 주세요.");
+
       // 재포커싱
       if (inputRef.current) {
         inputRef.current.focus();
@@ -93,7 +95,7 @@ const SignupFamilySet = () => {
   }
 
   // 뒤로 가기
-  const backTo = ():void => {
+  const backTo = (): void => {
     navigate(-1);
   }
 

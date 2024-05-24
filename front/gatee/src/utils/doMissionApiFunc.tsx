@@ -5,9 +5,8 @@ const doMissionApiFunc = (type: string, amount: number | null) => {
     type: type,
     photoCount: amount,
   },res => {
-    console.log(res)
   },err => {
-    console.log(err)
+    console.log(err);
   })
 
 };

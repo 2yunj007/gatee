@@ -1,29 +1,28 @@
 import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
-
-import {useFamilyStore} from "@store/useFamilyStore";
-import {getThumbnailPhotoApi} from "@api/photo";
 import {MonthYearPhotoTabProps} from "@type/index";
+import {getThumbnailPhotoApi} from "@api/photo";
+import {useFamilyStore} from "@store/useFamilyStore";
 import {usePhotoStore} from "@store/usePhotoStore";
 
 
 const AllMonth = () => {
-  const {familyId} = useFamilyStore()
-  const {monthThumbnailPhotoGroup,setMonthThumbnailPhotoGroup} = usePhotoStore()
+  const {familyId} = useFamilyStore();
+  const {monthThumbnailPhotoGroup, setMonthThumbnailPhotoGroup} = usePhotoStore();
+
+  // 년도별로 그룹화할 객체 생성
+  const groupedByYear: { [year: string]: any[] } = {};
+
   useEffect(() => {
     // 월별 사진 조회
     getThumbnailPhotoApi({familyId: familyId, filter: "MONTH"},
       res => {
-        console.log(res)
-        setMonthThumbnailPhotoGroup(res.data)
+        setMonthThumbnailPhotoGroup(res.data);
       },
       err => {
-        console.log(err)
+        console.log(err);
       })
   }, [])
-
-  // 년도별로 그룹화할 객체 생성
-  const groupedByYear: { [year: string]: any[] } = {};
 
 // 데이터 배열을 년도별로 그룹화
   monthThumbnailPhotoGroup.forEach(item => {
@@ -46,18 +45,18 @@ const AllMonth = () => {
             ))}
           </React.Fragment>
         ))}
-
     </div>
   );
 };
 
 const MonthItem = ({monthYearPhotoData}: MonthYearPhotoTabProps) => {
-  const dateString = monthYearPhotoData.createdAt
-  const createdAt = new Date(dateString);
+  const dateString: string = monthYearPhotoData.createdAt
+  const createdAt: Date = new Date(dateString);
+
   // 현재의 년도 추출
   const year = createdAt.getFullYear();
 
-// 현재의 월 추출 (0부터 시작하므로 +1을 해줘야 함)
+  // 현재의 월 추출 (0부터 시작하므로 +1을 해줘야 함)
   const month = createdAt.getMonth() + 1;
 
   return (

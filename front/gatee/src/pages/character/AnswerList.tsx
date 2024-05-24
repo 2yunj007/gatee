@@ -1,64 +1,58 @@
 import React, {useEffect, useState} from 'react';
+import {Link, useParams} from "react-router-dom";
 import Header from "@pages/character/components/Header";
 import AnswerItem from "@pages/character/components/AnswerItem";
-import {Link, useParams} from "react-router-dom";
-import {getAnsweredAskApi, getFamilyAnsweredAskApi} from "@api/dictionary";
 import {useMemberStore} from "@store/useMemberStore";
-import getUserInfoByMemberFamilyId from "@utils/getUserInfoByMemberFamilyId";
-import {Answer, MemberApiRes} from "@type/index";
 import {useFamilyStore} from "@store/useFamilyStore";
-import {ReactComponent as EmptyIcon} from "@assets/images/examImg/empty.svg";
 import {useDictStore} from "@store/useDictStore";
+import {Answer, MemberApiRes} from "@type/index";
+import {getAnsweredAskApi, getFamilyAnsweredAskApi} from "@api/dictionary";
+import getUserInfoByMemberFamilyId from "@utils/getUserInfoByMemberFamilyId";
+import {ReactComponent as EmptyIcon} from "@assets/images/examImg/empty.svg";
 
 const CharacterStart = () => {
-  const [answerTmpList, setTmpAnswerList] = useState<Answer[]>([])
-  const {setAnswerList} = useDictStore()
-  const {myInfo} = useMemberStore()
-  const {familyInfo} = useFamilyStore()
-  const params = useParams()
+  const [answerTmpList, setTmpAnswerList] = useState<Answer[]>([]);
+  const {setAnswerList} = useDictStore();
+  const {myInfo} = useMemberStore();
+  const {familyInfo} = useFamilyStore();
+  const params = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [isMine, setIsMine] = useState(false);
-  const [userInfo, setUserInfo] = useState<MemberApiRes | null>(null)
+  const [userInfo, setUserInfo] = useState<MemberApiRes | null>(null);
 
   useEffect(() => {
 
     if (params.memberFamilyId) {
-       const user = getUserInfoByMemberFamilyId(familyInfo, Number(params.memberFamilyId))
-      console.log(user)
-      setUserInfo(user)
+      const user = getUserInfoByMemberFamilyId(familyInfo, Number(params.memberFamilyId));
+      setUserInfo(user);
 
-      // 나일때
+      // 나일 때
       if (Number(myInfo.memberFamilyId) === Number(params.memberFamilyId)) {
-        setIsMine(true)
+        setIsMine(true);
 
         getAnsweredAskApi(res => {
-          console.log(res.data)
-          setTmpAnswerList(res?.data)
-          setAnswerList(res?.data)
-          setIsLoading(false)
+          setTmpAnswerList(res?.data);
+          setAnswerList(res?.data);
+          setIsLoading(false);
 
         }, err => {
-          console.log(err)
+          console.log(err);
         })
         // 다른 가족일때
       } else {
         getFamilyAnsweredAskApi(
           params.memberFamilyId,
           res => {
-            setTmpAnswerList(res?.data)
-            setIsLoading(false)
+            setTmpAnswerList(res?.data);
+            setIsLoading(false);
           },
           err => {
-            console.log(err)
+            console.log(err);
           }
         )
       }
-
-
     }
-
   }, [params]);
-
 
 
   return (<>

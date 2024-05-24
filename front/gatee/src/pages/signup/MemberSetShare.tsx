@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { BiCopy } from "react-icons/bi";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ReactComponent as KaKaoMessage } from "@assets/images/signup/kakao_message.svg";
-import { useFamilyStore } from "@store/useFamilyStore";
+import React, {useEffect} from 'react';
+import {BiCopy} from "react-icons/bi";
+import {useLocation, useNavigate} from "react-router-dom";
+import {ReactComponent as KaKaoMessage} from "@assets/images/signup/kakao_message.svg";
+import {useFamilyStore} from "@store/useFamilyStore";
 import base64 from "base-64";
 
 const SignupMemberSetShare = () => {
@@ -12,21 +12,19 @@ const SignupMemberSetShare = () => {
   const server: string | undefined = process.env.REACT_APP_API_URL;
   const accessToken: string | null = localStorage.getItem("accessToken");
 
-  const { familyName, stringImage, familyCode } = useFamilyStore();
+  const {familyName, stringImage, familyCode} = useFamilyStore();
 
   // from이 없다면 이동 막기
   useEffect(() => {
     if (!from) {
       if (accessToken) {
-        const payload: string = accessToken.substring(accessToken.indexOf('.')+1,accessToken.lastIndexOf('.'));
+        const payload: string = accessToken.substring(accessToken.indexOf('.') + 1, accessToken.lastIndexOf('.'));
         const decode = base64.decode(payload);
         const json = JSON.parse(decode);
 
         if (json.authorities[0] === "ROLE_ROLE_USER") {
-          alert(`잘못된 접근입니다.`);
           navigate(`/main`);
         } else {
-          alert(`잘못된 접근입니다.`);
           navigate(`/kakao`);
         }
       }
@@ -147,7 +145,7 @@ const SignupMemberSetShare = () => {
           className="btn-kakao__btn"
           onClick={kakaoMessage}
         >
-          <KaKaoMessage className="btn-kakao__icon" />
+          <KaKaoMessage className="btn-kakao__icon"/>
         </button>
       </div>
 

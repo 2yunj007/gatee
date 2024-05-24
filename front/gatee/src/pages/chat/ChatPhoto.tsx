@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import PhotoList from "@components/PhotoList";
-import { applyAppointmentParticipationApi, getChatFileApi } from "@api/chat";
-import { useFamilyStore } from "@store/useFamilyStore";
-import { FileRes } from "@type/index";
-import { useNavigate } from "react-router-dom";
-import { useChatStore } from "@store/useChatStore";
+import {useNavigate} from "react-router-dom";
+import {FileRes} from "@type/index";
+import {applyAppointmentParticipationApi, getChatFileApi} from "@api/chat";
+import {useFamilyStore} from "@store/useFamilyStore";
+import {useChatStore} from "@store/useChatStore";
 
 const ChatPhoto = () => {
-  const { chatRoomId } = useFamilyStore();
+  const {chatRoomId} = useFamilyStore();
   const navigate = useNavigate();
-  const { setPhotoDetailUrl, files, setFiles } = useChatStore();
+  const {setPhotoDetailUrl, files, setFiles} = useChatStore();
 
   useEffect(() => {
     if (chatRoomId) {
@@ -38,9 +37,9 @@ const ChatPhoto = () => {
 
   return (
     <div className="chat-photo">
-      { files.length === 0 && (
+      {files.length === 0 && (
         <div className="chat-photo__no-photo">
-         사진이 없습니다
+          사진이 없습니다
         </div>
       )}
       {files && files.map((file: FileRes, index: number) => (

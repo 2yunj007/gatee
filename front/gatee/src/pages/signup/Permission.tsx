@@ -21,7 +21,6 @@ const SignupPermission = () => {
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
-        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       }
     }
@@ -172,7 +171,6 @@ const SignupPermission = () => {
             </span>
         </button>
       </div>
-
     </div>
   );
 };
