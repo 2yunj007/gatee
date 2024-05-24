@@ -5,17 +5,18 @@ import {useFamilyStore} from "@store/useFamilyStore";
 import {usePhotoStore} from "@store/usePhotoStore";
 import {useShallow} from "zustand/react/shallow";
 
+
 export const AlbumNameInputModal = ({handleCloseAlbumNameInputModal}: {
   handleCloseAlbumNameInputModal: (inputValue: string, id: string | number) => void
 }) => {
-  // 입력상태
-  const [inputValue, setInputValue] = useState("");
-  const {familyId} = useFamilyStore()
+  // 입력 상태
+  const [inputValue, setInputValue] = useState<string>("");
+  const {familyId} = useFamilyStore();
   const {
     addAlbumList
   } = usePhotoStore(
-    useShallow((state)=>({
-      addAlbumList:state.addAlbumList,
+    useShallow((state) => ({
+      addAlbumList: state.addAlbumList,
     })))
 
   const muiFocusCustom = {
@@ -40,24 +41,22 @@ export const AlbumNameInputModal = ({handleCloseAlbumNameInputModal}: {
     event.stopPropagation();
     // 입력값이 비어있지 않을 때만 모달 닫기 함수 호출
     if (type === "input" && inputValue.trim() !== "") {
-
       // 앨범 생성 Api
       createAlbumApi({
           familyId: familyId,
           name: inputValue,
         },
         res => {
-          console.log(res)
           addAlbumList({
-            albumId:res.data,
-            name:inputValue,
-            imageUrl:null,
-            PhotoId:null,
+            albumId: res.data,
+            name: inputValue,
+            imageUrl: null,
+            PhotoId: null,
           })
           handleCloseAlbumNameInputModal(inputValue, res.data.albumId);
         },
         err => {
-          console.log(err)
+          console.log(err);
         })
 
     } else if (type === "close") {

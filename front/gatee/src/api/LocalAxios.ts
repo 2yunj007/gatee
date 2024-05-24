@@ -99,7 +99,7 @@ export default function localAxios(type?: string) {
 
           } catch (refreshError) {
             // 요청 실패 시 로그인 페이지로 리다이렉트
-            console.log("Error while refreshing token: ", refreshError);
+            console.error("Error while refreshing token: ", refreshError);
             window.location.href = "/kakao";
           }
         }

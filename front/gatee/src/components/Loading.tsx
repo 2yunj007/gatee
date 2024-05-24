@@ -6,7 +6,7 @@ import Lottie from "lottie-react";
 const Loading = () => {
   return (
     <div className="loading-container">
-      <LineLogo className="loading-app-icon" width={120} height={120} />
+      <LineLogo className="loading-app-icon" width={120} height={120}/>
       <Lottie className="loading-animation" animationData={LoadingAnimation}/>
     </div>
   );

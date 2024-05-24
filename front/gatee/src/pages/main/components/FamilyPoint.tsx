@@ -2,24 +2,25 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import React from "react";
 import {useFamilyStore} from "@store/useFamilyStore";
 import useModal from "@hooks/useModal";
-import {cl} from "@fullcalendar/core/internal-common";
 import FamilyProfile from "@pages/main/components/FamilyProfile";
 
+
 export const FamilyPoint = () => {
-  const { isOpen, openModal, closeModal } = useModal();
+  const {isOpen, openModal, closeModal} = useModal();
 
   const {familyScore, stringImage, familyName} = useFamilyStore();
-  const myFamilyTemp = 36 + familyScore
+  const myFamilyTemp: number = 36 + familyScore;
+
   const fontSizeFunc = (fontLength: number) => {
     if (fontLength <= 4) {
-      return 28
+      return 28;
     } else if (fontLength === 5) {
-      return 26
+      return 26;
     } else {
-      return 24
+      return 24;
     }
   }
-  
+
   // 패밀리 프로필 핸들러
   const handleModal = () => {
     openModal();

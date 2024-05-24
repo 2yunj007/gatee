@@ -1,18 +1,20 @@
 import React from 'react';
-import { useMemberStore } from "@store/useMemberStore";
-import { modifyMoodApi } from "@api/profile";
-import { AxiosError, AxiosResponse } from "axios";
+import {useMemberStore} from "@store/useMemberStore";
+import {modifyMoodApi} from "@api/profile";
+import {AxiosError, AxiosResponse} from "axios";
+
 
 interface HandleFinishTab {
   handleFinishTab: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const FeelingToast = ({handleFinishTab}:HandleFinishTab) => {
-  const { myInfo, setMyInfo } = useMemberStore();
+
+const FeelingToast = ({handleFinishTab}: HandleFinishTab) => {
+  const {myInfo, setMyInfo} = useMemberStore();
 
   // 완료 버튼 누르면 끝내기
   const handleFinish = (event: React.MouseEvent<HTMLButtonElement>) => {
-    handleFinishTab(event)
+    handleFinishTab(event);
   }
 
   // 기분 설정한 것을 보내기
@@ -23,13 +25,12 @@ const FeelingToast = ({handleFinishTab}:HandleFinishTab) => {
           mood: newMood
         },
         (res: AxiosResponse<any>) => {
-          console.log(res)
           // 기분 상태 수정
           setMyInfo({mood: newMood});
           handleFinish(event);
         },
         (err: AxiosError<any>) => {
-          console.log(err)
+          console.log(err);
         }
       ).then().catch();
     }

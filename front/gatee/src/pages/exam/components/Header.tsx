@@ -2,8 +2,8 @@ import React from 'react';
 import {useMemberStore} from "@store/useMemberStore";
 
 const Header = () => {
-  // const { familyName } = useFamilyStore()
-  const {myInfo} = useMemberStore()
+  const {myInfo} = useMemberStore();
+
   return (
     <div className="exam__header">
       {/*제목*/}
@@ -18,21 +18,8 @@ const Header = () => {
             {myInfo.name}
           </div>
         </div>
-
-        {/*/!*가족명*!/*/}
-        {/*<div className="exam__header-border">*/}
-        {/*  <div className="exam__header-border-left">*/}
-        {/*    가족명*/}
-        {/*  </div>*/}
-        {/*  <div className="exam__header-border-right">*/}
-        {/*    {familyName}*/}
-        {/*  </div>*/}
-        {/*</div>*/}
       </div>
-      <div className="exam__header-footer">
-
-      </div>
-
+      <div className="exam__header-footer"></div>
     </div>
   );
 };

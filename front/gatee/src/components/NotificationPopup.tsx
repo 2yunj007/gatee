@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import logo from "@assets/images/logo/app_icon_orange.svg"
 import {useNotificationStore} from "@store/useNotificationStore";
+
+
 const NotificationPopUp = () => {
   const {notificationPopUp, setNotificationPopUp, setShowNotification} = useNotificationStore();
   const navigate = useNavigate();

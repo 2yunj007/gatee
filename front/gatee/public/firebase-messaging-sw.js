@@ -50,23 +50,3 @@ self.addEventListener('notificationclick', function (event) {
   event.waitUntil(clients.openWindow(url));
 });
 
-
-// 전역 알림 받기 설정
-// self.addEventListener('push', function (e) {
-//   console.log(e.data.json().notification.title)
-// const notificationData=e.data.json().notification
-//   const notificationTitle = e.data.json().notification.title;
-//   if (notificationTitle.includes("채팅")) {
-//     url = "/chatting"
-//   } else if (notificationTitle.includes("사진")) {
-//     url = "/photo/day"
-//   } else if (notificationTitle.includes("한마디")) {
-//     url = "/notification"
-//   }
-//const notificationOptions = {
-//     body: notificationData.body,
-//     icon: notificationData.icon,
-//   };
-//    self.registration.showNotification(notificationTitle, notificationOptions);
-// });
-
