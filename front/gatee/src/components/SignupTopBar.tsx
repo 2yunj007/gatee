@@ -1,6 +1,6 @@
 import React from 'react';
-import {useNavigate, useLocation} from "react-router-dom";
-import {PiCaretLeft} from "react-icons/pi";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PiCaretLeft } from "react-icons/pi";
 
 const SignupTopBar = () => {
   const navigate = useNavigate();
@@ -31,12 +31,14 @@ const SignupTopBar = () => {
       style={location.pathname === '/signup' ? {
         backgroundColor: '#FFBE5C',
         border: "1px solid #FFBE5C",
-      } : {}}
+      } : {
+
+      }}
     >
       {/* 뒤로 가기 버튼 */}
       <div className="top-bar__left">
         {!hideBackButton && (
-          <PiCaretLeft size={24} onClick={goBack}/>
+          <PiCaretLeft size={24} onClick={goBack} />
         )}
       </div>
     </div>

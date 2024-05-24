@@ -1,13 +1,12 @@
 import React from 'react';
-import {useNavigate} from "react-router-dom";
-import {ReactComponent as LineLogo} from "@assets/images/logo/logo_line.svg"
-import {ReactComponent as KaKao} from "@assets/images/signup/kakao_narrow.svg"
-
+import { ReactComponent as LineLogo } from "@assets/images/logo/logo_line.svg"
+import { ReactComponent as KaKao } from "@assets/images/signup/kakao_narrow.svg"
+import { useNavigate } from "react-router-dom";
 
 const KaKaoLogin = () => {
-  const redirectUri: string | undefined = `${process.env.REACT_APP_API_URL}/auth`;
+  const redirectUri: string | undefined = `${process.env.REACT_APP_API_URL}/auth`
 
-  // 카카오 인가 코드 발급
+  // 카카오 인가코드 발급
   const loginWithKaKao = () => {
     window.Kakao.Auth.authorize({
       redirectUri: redirectUri,
@@ -40,6 +39,7 @@ const KaKaoLogin = () => {
         >
           <KaKao className="kakaoLoginImage "/>
         </button>
+
       </div>
     </div>
   );

@@ -1,37 +1,36 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, Outlet, useLocation, useNavigate, useParams} from "react-router-dom";
-import {useShallow} from "zustand/react/shallow";
 import {FiEdit} from "react-icons/fi";
 import {RiDeleteBin6Line} from "react-icons/ri";
 import {LuFolderInput} from "react-icons/lu";
 import {FaPlus} from "react-icons/fa6";
+import useModal from "@hooks/useModal";
 import {AlbumNameInputModal} from "@pages/photo/components/CreateAlbumModal";
-import Loading from "@components/Loading";
 import {EditModal} from "@pages/photo/components/EditModeModal";
 import {SelectAlbumModal} from "@pages/photo/components/SelectAlbum";
 import {deleteAlbumApi, deleteAlbumPhotoApi, deletePhotoApi, uploadAlbumPhotoApi, uploadPhotoApi} from "@api/photo";
-import {uploadFileApi} from "@api/file";
-import {doMissionApi} from "@api/mission";
-import useModal from "@hooks/useModal";
-import {useFamilyStore} from "@store/useFamilyStore";
-import {usePhotoStore} from "@store/usePhotoStore";
-import {useMissionStore} from "@store/useMissionStore";
-import {useMemberStore} from "@store/useMemberStore";
 import {imageResizer} from "@utils/imageResizer";
+import {uploadFileApi} from "@api/file";
+import {useFamilyStore} from "@store/useFamilyStore";
+import Loading from "@components/Loading";
+import {usePhotoStore} from "@store/usePhotoStore";
+import {useShallow} from "zustand/react/shallow";
+import {useMissionStore} from "@store/useMissionStore";
 import {findAlbumMission, getPossibleAmount} from "@utils/photoMissionHelper";
+import {doMissionApi} from "@api/mission";
+import {useMemberStore} from "@store/useMemberStore";
 
 
 const PhotoIndex = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const params = useParams();
-  const {familyId} = useFamilyStore();
-  const {myInfo} = useMemberStore();
-  const [loading, setLoading] = useState<boolean>(true);
-  const {missionList, increaseMissionRange} = useMissionStore();
-
+  const navigate = useNavigate()
+  const params = useParams()
+  const {familyId} = useFamilyStore()
+  const {myInfo} = useMemberStore()
+  const [loading, setLoading] = useState(true)
+  const {missionList, increaseMissionRange} = useMissionStore()
   // 앨범 미션
-  const albumMission = findAlbumMission(missionList);
+  const albumMission = findAlbumMission(missionList)
 
   const {
     addDetailPhotoGroup,
@@ -49,16 +48,13 @@ const PhotoIndex = () => {
       removeAlbumDetailPhotos: state.removeAlbumDetailPhotos,
     })))
 
-  // 상단 탭 상태 관리 -> 모든 사진 / 앨범 사진
-  const [activeTab, setActiveTab] = useState<string>("album");
-
+  // 상단 탭 상태 관리 -> 모든 사진 / 앨범사진
+  const [activeTab, setActiveTab] = useState("album"); // 현재 경로를 기본값으로 설정
   // 모든 사진의 하단 탭 상태 관리 -> 일 / 월 / 연
   const [allPhotoTab, setAllPhotoTab] = useState("day");
-
   // 모달 상태
   // 편집모드 고르기 모달 상태
   const {isOpen: showEditModeModal, openModal: openEditModal, closeModal: closeEditModeModal} = useModal();
-
   // 생성할 앨범 이름 입력 모달 상태
   const {
     isOpen: showAlbumNameInputModal,
@@ -75,14 +71,11 @@ const PhotoIndex = () => {
 
   // 편집할 photoId들이 담긴 set
   const editPhotoIdList: number[] = [];
-
   // 수정 모드 선택
-  const [editMode, setEditMode] = useState<string>("normal");
-
+  const [editMode, setEditMode] = useState("normal")
   // 목적지가 될 앨범 Id
   const [albumId, setAlbumId] = useState<string | number>(0);
-  const [albumName, setAlbumName] = useState<string>("");
-
+  const [albumName, setAlbumName] = useState("");
   // 추가될 사진
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -93,29 +86,30 @@ const PhotoIndex = () => {
 
   // 앨범 삭제
   const deleteAlbumApiFunc = (item: number) => {
-    removeAlbum(item);
+    removeAlbum(item)
     deleteAlbumApi(item,
       res => {
+        console.log(res)
         // 담아둔 id 리스트 비우기
         editPhotoIdList.length = 0;
       },
       err => {
-        console.log(err);
+        console.log(err)
       })
   }
 
   // 사진 삭제
   const deletePhotoApiFunc = () => {
-    removeDetailPhotos(editPhotoIdList);
-
+    removeDetailPhotos(editPhotoIdList)
     deletePhotoApi(
       {photoIdList: editPhotoIdList},
       res => {
+        console.log(res)
         // 담아둔 id 리스트 비우기
         editPhotoIdList.length = 0;
       },
       err => {
-        console.log(err);
+        console.log(err)
       }
     )
   }
@@ -129,31 +123,33 @@ const PhotoIndex = () => {
         photoIdList: editPhotoIdList
       },
       res => {
+        console.log(res)
         if (albumMission) {
-          doMissionApiFunc(editPhotoIdList.length, albumName);
+          doMissionApiFunc(editPhotoIdList.length, albumName)
         }
         editPhotoIdList.length = 0;
         navigate(`/photo/album/${albumId}/${albumName}`)
       },
       err => {
-        console.log(err);
+        console.log(err)
       }
     )
   }
 
   // 앨범 사진 삭제
   const deleteAlbumPhotoApiFunc = () => {
-    removeAlbumDetailPhotos(editPhotoIdList);
-
+    console.log("앨범 사진 삭제")
+    removeAlbumDetailPhotos(editPhotoIdList)
     deleteAlbumPhotoApi(
       {
         photoIdList: editPhotoIdList,
         albumId: albumId
       },
       res => {
+        console.log(res)
       },
       err => {
-        console.log(err);
+        console.log(err)
       }
     )
   }
@@ -165,21 +161,21 @@ const PhotoIndex = () => {
       if (location.pathname === "/photo/album") {
         // 앨범 삭제
         editPhotoIdList.forEach((item) => {
-          deleteAlbumApiFunc(item);
+          deleteAlbumApiFunc(item)
         })
         // 앨범 내 사진 삭제
       } else if (location.pathname.includes("/photo/album")) {
-        deleteAlbumPhotoApiFunc();
+        deleteAlbumPhotoApiFunc()
       } else {
         // 사진 삭제
-        deletePhotoApiFunc();
+        deletePhotoApiFunc()
       }
       // 이동 모드일 때
     } else if (editMode === "makeAlbum" || editMode === "moveAlbum") {
-      uploadPhotoApiFunc();
+      uploadPhotoApiFunc()
     }
     // 편집모드 초기화
-    setEditMode("normal");
+    setEditMode("normal")
   }
 
   // 편집 모달 보이기 이벤트
@@ -191,46 +187,46 @@ const PhotoIndex = () => {
   const handleCloseAlbumNameInputModal = (inputValue: string, id: number | string) => {
     // 백드롭 클릭 이벤트로 닫힌다면, 모달도 닫고 편집모드도 normal로 돌아가기
     if (inputValue === "") {
-      closeAlbumNameInputModal();
-      setEditMode("normal");
+      closeAlbumNameInputModal()
+      setEditMode("normal")
     } else {
-      setAlbumName(inputValue);
-      setAlbumId(id);
-      closeAlbumNameInputModal();
+      setAlbumName(inputValue)
+      setAlbumId(id)
+      closeAlbumNameInputModal()
     }
   }
 
   // 편집 모드를 결정하는 함수 => EditModal에서 받은 이벤트 실행 함수
   const handleSetEditMode = (mode: string) => {
-    // 편집 모드를 결정
-    setEditMode(mode);
+    // 편집 모드를 결정한다
+    setEditMode(mode)
 
     if (mode === "normal") {
-      // 일반 모드 선택 => 모달을 모두 끔
-      closeEditModeModal();
+      // 일반 모드 선택 => 모달을 모두 끈다
+      closeEditModeModal()
 
     } else if (mode === "delete") {
-      // 사진 삭제 모드 선택 => 모달을 끄고 편집 모드로 들어감
-      closeEditModeModal();
+      // 사진 삭제 모드 선택 => 모달을 끄고 편집 모드로 들어간다
+      closeEditModeModal()
 
     } else if (mode === "makeAlbum") {
-      // 앨범 생성 모드 선택 => 편집모달을 끄고, 앨범 이름 입력 모달을 킴
-      closeEditModeModal();
-      openAlbumNameInputModal();
+      // 앨범 생성 모드 선택 => 편집모달을 끄고, 앨범 이름 입력 모달을 킨다
+      closeEditModeModal()
+      openAlbumNameInputModal()
 
     } else if (mode === "editName") {
-      closeEditModeModal();
+      closeEditModeModal()
     } else {
-      // 앨범으로 이동 모드 선택 => 편집 모달을 끄고, 앨범 선택 모달을 킴
-      closeEditModeModal();
-      openSelectMoveAlbumModal();
+      // 앨범으로 이동 모드 선택 => 편집 모달을 끄고, 앨범 선택 모달을 킨다
+      closeEditModeModal()
+      openSelectMoveAlbumModal()
     }
   }
 
   // 편집할 사진 추가 및 삭제  => AlbumDetailPhotoList 컴포넌트에서 받은 이벤트 실행 함수
   const handleChecked = (photoId: number, type: string) => {
     if (type === "delete") {
-      // 체크가 풀린 사진을 삭제
+      // 체크가 풀린 사진을 삭제한다
       const index = editPhotoIdList.indexOf(photoId);
       if (index !== -1) {
         editPhotoIdList.splice(index, 1);
@@ -245,25 +241,25 @@ const PhotoIndex = () => {
 
   // 앨범 고르기
   const handleSelectAlbum = (name: string, id: number) => {
-    closeSelectMoveAlbumModal();
+    closeSelectMoveAlbumModal()
 
     // 백드롭 이벤트
     if (name === "" && id === 0) {
-      setEditMode("normal");
+      setEditMode("normal")
     } else {
-      setAlbumName(name);
-      setAlbumId(id);
+      setAlbumName(name)
+      setAlbumId(id)
     }
 
   }
 
   // 슬래시 새기 함수
   const countSlashes = (str: string): number => {
-    // 정규 표현식을 사용하여 '/' 문자의 개수를 셈
+    // 정규 표현식을 사용하여 '/' 문자의 개수를 센다
     const regex = /\//g;
     const matches = str.match(regex);
 
-    // '/' 문자의 개수를 반환
+    // '/' 문자의 개수를 반환한다
     return matches ? matches.length : 0;
   };
 
@@ -277,13 +273,14 @@ const PhotoIndex = () => {
 
       // 올릴 수 있는 점수
       const maxAmount = getPossibleAmount(albumMission, amount)
+      console.log("미션 수행 포토 카운트",maxAmount)
       // 미션 수행 API
       doMissionApi({type: "ALBUM", photoCount: maxAmount},
         res => {
           // 상태 저장
-          increaseMissionRange("ALBUM", maxAmount);
+          increaseMissionRange("ALBUM", maxAmount)
         }, err => {
-          console.log(err);
+          console.log(err)
         })
     }
   }
@@ -294,7 +291,7 @@ const PhotoIndex = () => {
 
       // 미션 수행
       if (albumMission && albumMission?.completedLevel >= 3) {
-        doMissionApiFunc(event.target.files.length, null);
+        doMissionApiFunc(event.target.files.length, null)
       }
 
       const files: File[] = Array.from(event.target.files);
@@ -321,29 +318,29 @@ const PhotoIndex = () => {
     // 파일 올리기
     uploadFileApi(formData,
       res => {
-        addedPhoto.fileId = res.data.fileId;
-        addedPhoto.imageUrl = res.data.imageUrl;
-
+        console.log(res)
+        addedPhoto.fileId = res.data.fileId
+        addedPhoto.imageUrl = res.data.imageUrl
         // 보내줄 사진 데이터
         const payload = {
           familyId: familyId,
           fileId: res.data.fileId
         }
-
         // 사진 등록하기
         uploadPhotoApi(
           payload,
           res => {
-            addedPhoto.photoId = res.data.photoId;
-            addDetailPhotoGroup(addedPhoto);
+            console.log(res)
+            addedPhoto.photoId = res.data.photoId
+            addDetailPhotoGroup(addedPhoto)
           }
           , err => {
-            console.log(err);
+            console.log(err)
           }
         )
       },
       err => {
-        console.log(err);
+        console.log(err)
       })
   };
 
@@ -357,35 +354,35 @@ const PhotoIndex = () => {
   // 뒤로가기 고려한 상태 변경
   useEffect(() => {
     // 이동될때마다 데이터 청소
-    setEditMode("normal");
+    setEditMode("normal")
     editPhotoIdList.length = 0;
 
     if (location.pathname.includes("/photo/month")) {
-      setAllPhotoTab("month");
-      setActiveTab("all");
+      setAllPhotoTab("month")
+      setActiveTab("all")
     } else if (location.pathname.includes("/photo/year")) {
-      setAllPhotoTab("year");
-      setActiveTab("all");
+      setAllPhotoTab("year")
+      setActiveTab("all")
     } else if (location.pathname.includes("/photo/day")) {
-      setAllPhotoTab("day");
-      setActiveTab("all");
+      setAllPhotoTab("day")
+      setActiveTab("all")
     } else if (location.pathname.includes("/photo/album")) {
-      setActiveTab("album");
+      setActiveTab("album")
       if (params?.id) {
-        setAlbumId(params?.id);
+        setAlbumId(params?.id)
 
       }
     } else if (location.pathname === "/photo") {
-      navigate("album");
+      navigate("album")
     } else {
-      setActiveTab("detail");
+      setActiveTab("detail")
     }
   }, [location.pathname]);
 
 
   useEffect(() => {
     setTimeout(() =>
-      setLoading(false), 500);
+      setLoading(false), 500)
   }, []);
 
 

@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {NavLink} from "react-router-dom";
-import {ChatMessage, SenderType, ChatContent, MemberApiReq} from "@type/index";
-import {useFamilyStore} from "@store/useFamilyStore";
-import {useMemberStore} from "@store/useMemberStore";
+import React, { useEffect, useState } from "react";
+import { ChatMessage, SenderType, ChatContent, MemberApiReq } from "@type/index";
 import getUserInfo from "@utils/getUserInfo";
 import convertKrTime from "@utils/convertKrTime";
 import renderBubbleComponent from "@utils/renderBubbleComponent";
-
+import { useFamilyStore } from "@store/useFamilyStore";
+import { useMemberStore } from "@store/useMemberStore";
+import { NavLink } from "react-router-dom";
 
 interface ChatMessageProps {
-  chat: ChatContent;
+ chat: ChatContent;
   isPrevSender: boolean;
 }
 
@@ -24,10 +23,9 @@ interface YourChatMessageProps {
   unReadMemberCount: number;
 }
 
-
 const YoursChat = (props: YourChatMessageProps) => {
-  const {chat, isPrevSender, unReadMemberCount} = props;
-  const {familyInfo} = useFamilyStore();
+  const { chat, isPrevSender, unReadMemberCount } = props;
+  const { familyInfo } = useFamilyStore();
   const senderInfo: null | MemberApiReq = getUserInfo(familyInfo, chat.sender);
 
   return (
@@ -42,7 +40,7 @@ const YoursChat = (props: YourChatMessageProps) => {
       <div className="chat__yours-chat__container">
         {/*닉네임*/}
         {!isPrevSender && (
-          <div className="chat__yours-chat__nickname">{senderInfo?.nickname}</div>
+          <div className="chat__yours-chat__nickname">{ senderInfo?.nickname }</div>
         )}
 
         {/*내용*/}
@@ -52,14 +50,14 @@ const YoursChat = (props: YourChatMessageProps) => {
       <div className="chat__time-count-wrapper">
         {/*리딩 카운트*/}
         <div className="chat__count">
-          {unReadMemberCount > 0 && (
-            <span>{unReadMemberCount}</span>
-          )}
+        {unReadMemberCount > 0 && (
+          <span>{unReadMemberCount}</span>
+        )}
         </div>
 
         {/*시간*/}
         <div className="chat__time">
-          {convertKrTime(chat.currentTime)}
+          { convertKrTime(chat.currentTime) }
         </div>
       </div>
     </div>
@@ -67,7 +65,7 @@ const YoursChat = (props: YourChatMessageProps) => {
 };
 
 const MyChat = (props: MyChatMessageProps) => {
-  const {chat, unReadMemberCount} = props;
+  const { chat, unReadMemberCount } = props;
 
   return (
     <div className="chat__my-chat">
@@ -92,8 +90,8 @@ const MyChat = (props: MyChatMessageProps) => {
 };
 
 const BubbleChat = (props: ChatMessageProps) => {
-  const {chat, isPrevSender} = props;
-  const {myInfo} = useMemberStore();
+  const { chat, isPrevSender } = props;
+  const { myInfo } = useMemberStore();
   const [unReadMemberCount, setUnReadMemberCount] = useState<number>(0);
 
   useEffect(() => {
@@ -111,7 +109,7 @@ const BubbleChat = (props: ChatMessageProps) => {
     case SenderType.YOURS:
       return <YoursChat chat={chat as ChatMessage} isPrevSender={isPrevSender} unReadMemberCount={unReadMemberCount}/>;
     case SenderType.MY:
-      return <MyChat chat={chat as ChatMessage} unReadMemberCount={unReadMemberCount}/>;
+      return <MyChat chat={chat as ChatMessage} unReadMemberCount={unReadMemberCount} />;
     default:
       return null;
   }

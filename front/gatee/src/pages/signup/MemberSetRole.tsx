@@ -36,15 +36,19 @@ const SignupMemberSetRole = () => {
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
+        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyName) {
+          alert('먼저 가족을 소개해주세요!');
           navigate(`/signup/family-set`);
         } else {
           if (!name) {
+            alert('먼저 이름을 입력해주세요!');
             navigate(`/signup/member-set`);
           } else {
             if (!birth) {
+              alert('먼저 생일을 입력해주세요!');
               navigate(`/signup/member-set/birth`);
             }
           }
@@ -64,7 +68,7 @@ const SignupMemberSetRole = () => {
     // 입력값 검증
     if (role && (role.length < 1 || role.length > 6 || !/^[가-힣]*$/.test(role))) {
       // 오류 메시지 설정
-      setErrorMessage("한글 1~6자를 입력해 주세요.");
+      setErrorMessage("한글로 1~6글자를 입력해주세요.");
       // 재포커싱
       if (inputRef.current) {
         inputRef.current.focus();

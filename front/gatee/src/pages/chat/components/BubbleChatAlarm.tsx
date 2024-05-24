@@ -1,17 +1,16 @@
 import React from 'react';
-import dayjs from "dayjs";
-import {ChatAlarm} from "@type/index";
+import { ChatAlarm } from "@type/index";
 import Card from '@mui/material/Card';
 import MegaphoneIcon from "@assets/images/icons/ic_megaphone.png";
-
+import dayjs from "dayjs";
+import AvatarGroup from "@mui/material/AvatarGroup";
 
 interface ChatAlarmProps {
   chat: ChatAlarm;
 }
 
-
 const BubbleChatAlarm = (props: ChatAlarmProps) => {
-  const {chat} = props;
+  const { chat } = props;
 
   return (
     <Card className="bubble-appointment" variant="outlined" sx={{borderRadius: 3}}>
@@ -28,12 +27,12 @@ const BubbleChatAlarm = (props: ChatAlarmProps) => {
           </div>
         </div>
       </div>
-
+      
       {/*내용*/}
       <div className="bubble-appointment__message">
-        {chat.content}
+        { chat.content }
       </div>
-
+      
       <div>
         <div className="bubble-appointment__participants-status">
           종료
@@ -43,7 +42,7 @@ const BubbleChatAlarm = (props: ChatAlarmProps) => {
         </button>
       </div>
     </Card>
-  );
+);
 };
 
 export default BubbleChatAlarm;

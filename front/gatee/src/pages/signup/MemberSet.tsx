@@ -1,28 +1,31 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import {useMemberStore} from "@store/useMemberStore";
+import { useNavigate } from "react-router-dom";
+import { useMemberStore } from "@store/useMemberStore";
 import base64 from "base-64";
-import {useFamilyStore} from "@store/useFamilyStore";
+import { useFamilyStore } from "@store/useFamilyStore";
 
 const SignupMemberSet = () => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const accessToken: string | null = localStorage.getItem("accessToken");
-  const {name, setName} = useMemberStore();
-  const {familyName} = useFamilyStore();
+  const { name, setName } = useMemberStore();
+  const { familyName } = useFamilyStore();
+
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // 권한에 따라 redirect
   useEffect(() => {
     if (accessToken) {
-      const payload: string = accessToken.substring(accessToken.indexOf('.') + 1, accessToken.lastIndexOf('.'));
+      const payload: string = accessToken.substring(accessToken.indexOf('.')+1,accessToken.lastIndexOf('.'));
       const decode = base64.decode(payload);
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
+        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyName) {
+          alert('먼저 가족을 소개해주세요!');
           navigate(`/signup/family-set`);
         }
       }
@@ -43,7 +46,7 @@ const SignupMemberSet = () => {
     // 입력값 검증
     if (name?.length < 1 || name?.length > 6 || !/^[가-힣]*$/.test(name)) {
       // 오류 메시지 설정
-      setErrorMessage("한글 1~8자를 입력해 주세요.");
+      setErrorMessage("한글로 1~8글자를 입력해주세요.");
       // 재포커싱
       if (inputRef.current) {
         inputRef.current.focus();

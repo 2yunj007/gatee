@@ -1,22 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import {FamilyPoint} from "@pages/main/components/FamilyPoint";
-import ProfileList from "@pages/main/components/ProfileList";
-import Loading from "@components/Loading";
-import {getFamilyMemberApi, getMyDataApi} from "@api/member";
-import {getMissionApi} from "@api/mission";
-import {useMemberStore} from "@store/useMemberStore";
-import {useMissionStore} from "@store/useMissionStore";
-import {useFamilyStore} from "@store/useFamilyStore";
 import {ReactComponent as House} from "@assets/images/main/main_home.svg";
 import HeartAnimation from "@assets/images/animation/heart_animation.json"
 import Lottie from "lottie-react";
-import {FiBook} from "react-icons/fi";
-
-
+import {FamilyPoint} from "@pages/main/components/FamilyPoint";
+import ProfileList from "@pages/main/components/ProfileList";
+import {getFamilyMemberApi, getMyDataApi} from "@api/member";
+import {useMemberStore} from "@store/useMemberStore";
+import {useFamilyStore} from "@store/useFamilyStore";
+import Loading from "@components/Loading";
+import { FiBook } from "react-icons/fi";
+import {getMissionApi} from "@api/mission";
+import {useMissionStore} from "@store/useMissionStore";
 const MainIndex = () => {
   // const {setMyInfo} = useMemberStore()
-  const {setMyInfo} = useMemberStore()
+  const { setMyInfo} = useMemberStore()
   const {
     familyInfo,
     familyId,
@@ -28,16 +26,17 @@ const MainIndex = () => {
     setInputStringImage,
   } = useFamilyStore()
   const [loading, setLoading] = useState<boolean>(false);
-  const {setMissionList} = useMissionStore();
+  const { setMissionList} = useMissionStore();
   const [isGetFamilyDate, setIsGetFamilyDate] = useState<boolean>(false);
   const [isGetMemberDate, setIsGetMemberDate] = useState<boolean>(false);
   const [isGetMissionDate, setIsGetMissionDate] = useState<boolean>(false);
 
   // 가족 데이터 저장 Api
-  const saveFamilyData = (familyId: string) => {
+  const saveFamilyData = (familyId:string) => {
     setIsGetFamilyDate(false);
-    getFamilyMemberApi({familyId: familyId},
+    getFamilyMemberApi({familyId:familyId},
       (res) => {
+        console.log("가족 정보 조회",res.data);
         setFamilyInfo(res.data.memberFamilyInfoList);
         setFamilyName(res.data.name);
         setFamilyScore(res.data.familyScore);
@@ -55,8 +54,9 @@ const MainIndex = () => {
   // 미션 저장 api
   const getMissionApiFunc = () => {
     setIsGetMissionDate(false);
-    getMissionApi({familyId: familyId},
+    getMissionApi({familyId:familyId},
       res => {
+        console.log(res);
         setMissionList(res.data.missionListResList);
         setIsGetMissionDate(true);
       },
@@ -71,6 +71,7 @@ const MainIndex = () => {
     setIsGetMemberDate(false);
     getMyDataApi(
       (res) => {
+        console.log("내 정보 조회",res.data);
         // 스토어에 저장
         setMyInfo(res.data);
         setFamilyId(res.data.familyId);
@@ -86,8 +87,8 @@ const MainIndex = () => {
   }
 
   useEffect(() => {
-    saveMemberData();
-    getMissionApiFunc();
+    saveMemberData()
+    getMissionApiFunc()
   }, []);
 
   useEffect(() => {
@@ -98,21 +99,21 @@ const MainIndex = () => {
 
   return (
     <div className="main-container">
-      {loading ? <Loading/> : null}
-      {/* 가족 온도 */}
-      <FamilyPoint/>
+      {loading? <Loading/> : null}
+        {/* 가족 온도 */}
+        <FamilyPoint/>
 
-      {/* 프로필 리스트 */}
-      <ProfileList profileDataList={familyInfo}/>
+        {/* 프로필 리스트 */}
+        <ProfileList profileDataList={familyInfo}/>
 
-      {/* 미션 탭으로 가기 */}
-      <Link to="/character/start" className="go-to-mission__button-event">
-        <FiBook size={35}/>
-        <p>사전</p>
-      </Link>
+        {/* 미션 탭으로 가기 */}
+        <Link to="/character/start" className="go-to-mission__button-event">
+          <FiBook size={35}/>
+          <p>사전</p>
+        </Link>
 
-      <Lottie className="main-heart-animation" animationData={HeartAnimation}/>
-      <House className="main-house-img"/>
+        <Lottie className="main-heart-animation" animationData={HeartAnimation}/>
+        <House className="main-house-img"/>
     </div>
   );
 }

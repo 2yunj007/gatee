@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {useOutletContext} from 'react-router-dom';
 import PhotoList from "@components/PhotoList";
+import {useOutletContext} from 'react-router-dom';
 import {PhotoOutletInfoContext} from "@type/index";
 import {getListPhotoApi} from "@api/photo";
 import {useFamilyStore} from "@store/useFamilyStore";
@@ -9,10 +9,10 @@ import {useShallow} from "zustand/react/shallow";
 
 
 const AllDay = () => {
-  const {familyId} = useFamilyStore();
+  const {familyId} = useFamilyStore()
   const {editMode, handleChecked} = useOutletContext<PhotoOutletInfoContext>();
-  const {setDetailPhotoGroup} = usePhotoStore();
-  const {detailPhotoGroup} = usePhotoStore(
+  const {setDetailPhotoGroup} = usePhotoStore()
+  const { detailPhotoGroup } = usePhotoStore(
     useShallow((state) => ({
       detailPhotoGroup: state.detailPhotoGroup,
     })),
@@ -25,23 +25,24 @@ const AllDay = () => {
       year: "",
       month: ""
     }
-
     getListPhotoApi(payload,
       res => {
-        setDetailPhotoGroup(res.data);
+        console.log(res)
+        setDetailPhotoGroup(res.data)
       },
       err => {
-        console.log(err);
+        console.log(err)
       })
   }
-  
+
+
   useEffect(() => {
-    getListPhotoApiFunc();
+    getListPhotoApiFunc()
   }, []);
 
   useEffect(() => {
+    console.log(detailPhotoGroup)
   }, [detailPhotoGroup]);
-
   return (
     <div className="day-tab--container">
       <PhotoList editMode={editMode} photoGroup={detailPhotoGroup} handleChecked={handleChecked}/>

@@ -5,14 +5,14 @@ import { useModalStore } from "@store/useModalStore";
 import SignupTopBar from "@components/SignupTopBar";
 import SignupBottomBar from "@components/SignupBottomBar";
 
-
 const SubLayout = () => {
   const { showModal } = useModalStore();
   const [currentUrl, setCurrentUrl] = useState("");
-  const location = useLocation();
-
+  // 현재의 url을 추적
+  const location = useLocation()
+  // url이 변경될 때마다 저장해줌
   useEffect(() => {
-    setCurrentUrl(location.pathname);
+    setCurrentUrl(location.pathname)
   },[location.pathname])
 
   return (

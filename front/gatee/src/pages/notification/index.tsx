@@ -1,25 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import FeatureModal from "@pages/notification/components/FeatureModal";
+import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Button from '@mui/material/Button';
 import SettingsToast from "@pages/notification/components/SettingsToast";
-import NaggingModal from "@pages/notification/components/NaggingModal";
-import {NotificationRes} from "@type/index";
+import {useModalStore} from "@store/useModalStore";
 import {
   getNotificationListFirstApi,
   getNotificationListNextApi,
   readNotificationApi
 } from "@api/notification";
-import {useModalStore} from "@store/useModalStore";
-import {useNotificationStore} from "@store/useNotificationStore";
+import {NotificationRes} from "@type/index";
 import useModal from "@hooks/useModal";
+import NaggingModal from "@pages/notification/components/NaggingModal";
 import useObserver from "@hooks/useObserver";
-import getUrlFromType from "@utils/getUrlFromType";
-import ScrollAnimation from "@assets/images/animation/scroll_animation.json";
-import dayjs from "dayjs";
 import Lottie from "lottie-react";
-import Box from '@mui/material/Box';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Button from '@mui/material/Button';
+import ScrollAnimation from "@assets/images/animation/scroll_animation.json";
+import getUrlFromType from "@utils/getUrlFromType";
+import {useNavigate} from "react-router-dom";
+import {useNotificationStore} from "@store/useNotificationStore";
+import FeatureModal from "@pages/notification/components/FeatureModal";
+import dayjs from "dayjs";
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -30,19 +30,18 @@ const NotificationIndex = () => {
   const [state, setState] = useState({
     bottom: false,
   });
-
-  // 모달 상태 관리
-  const {isOpen: isNaggingModalOpen, openModal: openNaggingModal, closeModal: closeNaggingModal} = useModal();
-  const {isOpen: isFeatureModalOpen, openModal: openFeatureModal, closeModal: closeFeatureModal} = useModal();
-
+  // 모달 상태관리
+  const {isOpen:isNaggingModalOpen, openModal:openNaggingModal, closeModal:closeNaggingModal} = useModal()
+  const {isOpen:isFeatureModalOpen, openModal:openFeatureModal, closeModal:closeFeatureModal} = useModal()
   // MUI 관련 코드 -> 슬라이드 다운 해서 내리기 기능 가능
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
       (event: React.KeyboardEvent | React.MouseEvent) => {
+        console.log(anchor)
         if (open === true) {
-          setShowModal(true);
+          setShowModal(true)
         } else {
-          setShowModal(false);
+          setShowModal(false)
         }
         if (
           event &&
@@ -57,7 +56,8 @@ const NotificationIndex = () => {
 
   // 설정 탭에서 완료 버튼 누를 때 팝업 내리기
   const handleFinishTab = (event: React.MouseEvent) => {
-    toggleDrawer('bottom', false)(event);
+    console.log("부모")
+    toggleDrawer('bottom', false)(event)
   }
 
   // 토스트 객체
@@ -78,52 +78,52 @@ const NotificationIndex = () => {
   const navigate = useNavigate()
   // 모달 상태 적용
   const {setShowModal} = useModalStore()
-  const {notificationPopUp, setShowNotification} = useNotificationStore();
+  const {notificationPopUp,setShowNotification} = useNotificationStore()
   const [hasNext, setHasNext] = useState<boolean>(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [clickedNotification, setClickedNotification] = useState<NotificationRes | null | undefined>(null)
   const [isLoading, setLoading] = useState<boolean>(false)
-  const [isGetAllData, setIsGetAllData] = useState<boolean | null>(null);
+  const [isGetAllData, setIsGetAllData] = useState<boolean|null>(null);
   // 알림 데이터 리스트
-  const {notificationDataList, setNotificationDataList, setNotificationChecked} = useNotificationStore()
+  const {notificationDataList, setNotificationDataList,setNotificationChecked} = useNotificationStore()
 
   // 읽음 처리
   const handleReadNotification = (id: string, isCheck: boolean) => {
     const clicked = notificationDataList.find((item) => item.notificationId === id)
-    setClickedNotification(clicked);
+    setClickedNotification(clicked)
     if (clicked && clicked?.type === "NAGGING")
-      openNaggingModal();
+      openNaggingModal()
     else if (clicked && clicked?.type === "FEATURE")
-      openFeatureModal();
-
+      openFeatureModal()
     if (!isCheck) {
       readNotificationApi({notificationId: id}
         , res => {
-          // 이동해야 할 때 navigate
+          console.log(res.data)
+
+          // 이동해야할때 navigate
           if (clicked?.type !== "NAGGING" && clicked?.type !== "FEATURE")
-            navigate(getUrlFromType(clicked?.type, clicked?.typeId));
+            navigate(getUrlFromType(clicked?.type, clicked?.typeId))
 
           // 이동 안할때는 상태 업데이트(css) 변경
           setNotificationChecked(id);
         }
         , err => {
-          console.log(err);
+          console.log(err)
         })
     } else if (clicked?.type !== "NAGGING" && clicked?.type !== "FEATURE") {
-      navigate(getUrlFromType(clicked?.type, clicked?.typeId));
+      navigate(getUrlFromType(clicked?.type, clicked?.typeId))
     }
   }
 
   // 모달 내리기
   const handleModal = () => {
-    closeNaggingModal();
-    closeFeatureModal();
+    closeNaggingModal()
+    closeFeatureModal()
   }
 
   // 스크롤
   const nextScroll = () => {
-    setLoading(true);
-
+    setLoading(true)
     if (nextCursor && hasNext) {
       getNotificationListNextApi(nextCursor,
         res => {
@@ -132,12 +132,12 @@ const NotificationIndex = () => {
             ...notificationDataList,
             ...res.data.pushNotificationResList
           ]);
-          setHasNext(res.data.hasNext);
-          setNextCursor(res.data.nextCursor);
+          setHasNext(res.data.hasNext)
+          setNextCursor(res.data.nextCursor)
           setIsGetAllData(!res.data.hasNext);
-          setLoading(false);
+          setLoading(false)
         }, err => {
-          console.log(err);
+          console.log(err)
         })
     }
   }
@@ -148,27 +148,27 @@ const NotificationIndex = () => {
   })
 
   const getNotificationListFirstApiFunc = () => {
-    setShowNotification(false);
-
+    setShowNotification(false)
     getNotificationListFirstApi(
       res => {
-        setNotificationDataList(res.data.pushNotificationResList);
-        setHasNext(res.data.hasNext);
+        console.log(res.data)
+        setNotificationDataList(res.data.pushNotificationResList)
+        setHasNext(res.data.hasNext)
         setIsGetAllData(!res.data.hasNext);
-        setNextCursor(res.data.nextCursor);
+        setNextCursor(res.data.nextCursor)
       }, err => {
-        console.log(err);
+        console.log(err)
       })
   }
   // 알림 리스트 가져오기
   useEffect(() => {
-    getNotificationListFirstApiFunc();
+    getNotificationListFirstApiFunc()
   }, []);
 
   // 알림 뜨면 새로 갱신
   useEffect(() => {
-    if (notificationPopUp !== null) {
-      getNotificationListFirstApiFunc();
+    if (notificationPopUp!== null) {
+      getNotificationListFirstApiFunc()
     }
   }, [notificationPopUp]);
 
@@ -201,7 +201,7 @@ const NotificationIndex = () => {
           return <NotificationItem key={index} notificationData={item} handleReadNotification={handleReadNotification}/>
         })}
 
-        {isGetAllData === false && (
+        {isGetAllData===false && (
           <div className="scroll-target" ref={target}>
             <Lottie className="scroll-target__animation" animationData={ScrollAnimation}/>
           </div>
@@ -218,9 +218,9 @@ const NotificationIndex = () => {
 
         :
         null}
-      {isFeatureModalOpen ?
-        <FeatureModal notificationData={clickedNotification} handleModal={handleModal}/>
-        : null}
+      {isFeatureModalOpen?
+      <FeatureModal notificationData={clickedNotification} handleModal={handleModal}/>
+      :null}
     </div>
   );
 };
@@ -228,8 +228,20 @@ const NotificationIndex = () => {
 // 알림 아이템
 const NotificationItem = ({notificationData, handleReadNotification}: {
   notificationData: NotificationRes,
-  handleReadNotification: (id: string, isCheck: boolean) => void
+  handleReadNotification: (id: string, isCheck: boolean) => void // 수정된 부분
 }) => {
+
+  // const today = new Date()
+  // const todayYear = today.getFullYear()
+  // const todayMonth = today.getMonth()+1
+  // const todayDate = today.getDate()
+  // const dateDate = new Date(notificationData.createdAt)
+  // const year = dateDate.getFullYear()
+  // const month = dateDate.getMonth() + 1
+  // const date = dateDate.getDate()
+  // const hour = dateDate.getHours()
+  // const minute = dateDate.getMinutes()
+
   const today = dayjs();
   const notificationDate = dayjs(notificationData.createdAt);
 
@@ -245,7 +257,7 @@ const NotificationItem = ({notificationData, handleReadNotification}: {
 
   // 알림 누르기
   const handleNotificationItemClick = () => {
-    handleReadNotification(notificationData.notificationId, notificationData.isCheck);
+    handleReadNotification(notificationData.notificationId, notificationData.isCheck)
   }
   return (
     <div onClick={() => handleNotificationItemClick()}
@@ -260,8 +272,13 @@ const NotificationItem = ({notificationData, handleReadNotification}: {
       <div className="notification-item--content-container">
         <div className="notification-item--top--container">
           <p className="notification-item-title">{notificationData.title}</p>
+          {/*올해가 아니면 년도 보여줌, 오늘이면 시간 보여줌*/}
+          {/*<p className="notification-item-time">{todayYear === year && todayMonth===month && todayDate===date ?*/}
+          {/*  hour >= 12 ? `오후 ${hour-12}:${minute} ` : `오전 ${hour}:${minute}`*/}
+          {/*  : todayYear === year ? `${month}월 ${date}일` : `${year}년 ${month}월 ${date}일`}*/}
+          {/*</p>*/}
           <p className="notification-item-time">
-            {displayTime}
+            { displayTime }
           </p>
         </div>
         <p className="notification-item-content">{notificationData.content}</p>

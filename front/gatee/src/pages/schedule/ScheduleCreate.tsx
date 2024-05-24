@@ -1,44 +1,47 @@
-import React, {useState, useEffect} from "react";
-import {useSearchParams, useNavigate} from "react-router-dom"
-import dayjs, {Dayjs} from 'dayjs';
-import {TextField} from '@mui/material';
-import {DateField} from '@mui/x-date-pickers/DateField';
-import {TimeField} from '@mui/x-date-pickers/TimeField';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {DateValidationError} from "@mui/x-date-pickers";
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom"
+import dayjs, { Dayjs } from 'dayjs';
+
+import { TextField } from '@mui/material';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateValidationError } from "@mui/x-date-pickers";
 import Box from "@mui/material/Box";
-import {outlinedInputClasses} from '@mui/material/OutlinedInput';
-import {createTheme, ThemeProvider, Theme, useTheme} from '@mui/material/styles';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import { createTheme, ThemeProvider, Theme, useTheme } from '@mui/material/styles';
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+
 import calculateWeekday from "@utils/calculateWeekday";
 import getUserInfo from "@utils/getUserInfo";
 import doMissionApiFunc from "@utils/doMissionApiFunc";
 import getColorCode from "@utils/getColorCode";
-import {useFamilyStore} from "@store/useFamilyStore";
-import {useModalStore} from "@store/useModalStore";
-import {SCHEDULE_COLOR} from "@constants/index";
-import {createScheduleApi} from "@api/schedule";
-import {CreateScheduleReq} from "@type/index";
-import {ScheduleType} from "@type/index";
+import { useFamilyStore } from "@store/useFamilyStore";
+import { useModalStore } from "@store/useModalStore";
+import { SCHEDULE_COLOR } from "@constants/index";
+import { createScheduleApi } from "@api/schedule";
+import { CreateScheduleReq } from "@type/index";
+import { ScheduleType } from "@type/index";
 import CustomSwitch from "@components/CustomSwitch";
-import {BsTextParagraph} from "react-icons/bs";
-import {IoTimeOutline} from "react-icons/io5";
-import {PiShapes} from "react-icons/pi";
-import {GoPerson} from "react-icons/go";
+
+import { BsTextParagraph } from "react-icons/bs";
+import { IoTimeOutline } from "react-icons/io5";
+import { PiShapes } from "react-icons/pi";
+import { GoPerson } from "react-icons/go";
 
 
 const ScheduleCreate = () => {
   dayjs.locale('ko');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const {familyInfo, familyId} = useFamilyStore();
+  const { familyInfo, familyId} = useFamilyStore();
 
   const [title, setTitle] = useState<string>("");
   const [emoji, setEmoji] = useState<string>("orange")
@@ -52,7 +55,7 @@ const ScheduleCreate = () => {
   const allMember: string[] = familyInfo.map(member => member.memberId);
 
   const [state, setState] = React.useState({bottom: false});
-  const {setShowModal} = useModalStore();
+  const { setShowModal } = useModalStore();
   type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
   const [isTitleError, setIsTitleError] = useState<boolean>(false);
@@ -121,7 +124,8 @@ const ScheduleCreate = () => {
 
     if (event.target.value as string === ScheduleType.GROUP) {
       setMemberIdList(allMember);
-    } else {
+    }
+    else {
       setMemberIdList([]);
     }
   }
@@ -210,7 +214,7 @@ const ScheduleCreate = () => {
   // 하루 종일 체크 핸들러
   const handleALlDayCheck = () => {
     setIsAllDayCheck(!isAllDayCheck);
-
+    
     // 시간 초기화
     setStartTime(dayjs(`${searchParams.get("start")}T00:00:00`));
     setEndTime(dayjs(`${searchParams.get("end")}T23:59:59`));
@@ -388,10 +392,10 @@ const ScheduleCreate = () => {
     <div className="create-schedule">
       {/*로딩*/}
       <Backdrop
-        sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isCreatingSchedule}
       >
-        <CircularProgress color="inherit"/>
+        <CircularProgress color="inherit" />
       </Backdrop>
 
       <div className="create-schedule__input-container">

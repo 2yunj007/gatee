@@ -1,23 +1,23 @@
+// 수정 모드 고르는 모달
 import {useLocation} from "react-router-dom";
 import {FiFolderPlus} from "react-icons/fi";
 import {MdDriveFileMoveOutline} from "react-icons/md";
 import {RiDeleteBin6Line} from "react-icons/ri";
-import {TbPencilMinus} from "react-icons/tb";
+import { TbPencilMinus } from "react-icons/tb";
 
 interface handleSetEditMode {
   handleSetEditMode: (mode: string) => void
 }
 
 export const EditModal = ({handleSetEditMode}: handleSetEditMode) => {
-  const location = useLocation();
 
   // 버튼 눌렀을때 편집 모드를 설정
   const handleBtn = (event: React.MouseEvent<HTMLDivElement>, mode: string) => {
     // 백드롭 이벤트로 인한 이벤트 버블링 방지
     event.stopPropagation();
-    handleSetEditMode(mode);
+    handleSetEditMode(mode)
   }
-  
+  const location = useLocation()
   return (
     <div className="edit-modal-bg"
          onClick={(event) => handleBtn(event, "normal")}>

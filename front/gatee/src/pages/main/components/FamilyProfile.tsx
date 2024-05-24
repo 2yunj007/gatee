@@ -1,16 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Simulate} from "react-dom/test-utils";
-import {AxiosError, AxiosResponse} from "axios";
-
-import ProfileCropper from "@pages/profile/components/Cropper";
-import {changeFamilyImageApi, changeFamilyNameApi} from "@api/member";
 import useModal from "@hooks/useModal";
-import {imageResizer} from "@utils/imageResizer";
-import {useFamilyStore} from "@store/useFamilyStore";
-
+import ProfileCropper from "@pages/profile/components/Cropper";
+import { imageResizer } from "@utils/imageResizer";
+import { useFamilyStore } from "@store/useFamilyStore";
 import {IoIosCamera} from "react-icons/io";
+import {changeFamilyImageApi, changeFamilyNameApi} from "@api/member";
+import {AxiosError, AxiosResponse} from "axios";
+import {Simulate} from "react-dom/test-utils";
 import input = Simulate.input;
-
 
 const FamilyProfile = (props: {
   handleFinishModal: () => void
@@ -18,7 +15,7 @@ const FamilyProfile = (props: {
   const sender: string = "family-profile"
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {handleFinishModal} = props;
+  const { handleFinishModal } = props;
   const {
     familyId,
     familyName,
@@ -31,7 +28,7 @@ const FamilyProfile = (props: {
     inputStringImage,
     setInputStringImage,
   } = useFamilyStore();
-  const {isOpen, openModal, closeModal} = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
 
   useEffect(() => {
     setInputImage(null);
@@ -57,11 +54,10 @@ const FamilyProfile = (props: {
   }
 
   // 이미지 선택 처리
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>)=> {
     const file: File | null = e.target.files ? e.target.files[0] : null;
     if (file) {
       const resizedFile: File = (await imageResizer(file, 2000, 2000)) as File;
-
       // 크롭할 이미지 넣기
       const jpgUrl = URL.createObjectURL(resizedFile);
 
@@ -89,20 +85,21 @@ const FamilyProfile = (props: {
     // 입력값 검증
     if (inputName.length < 1 || inputName.length > 6 || !/^[가-힣]*$/.test(inputName)) {
       // 오류 메시지 설정
-      setErrorMessage("한글로 1~6 글자를 입력해 주세요.");
+      setErrorMessage("한글로 1~6글자를 입력해주세요.");
       // 재포커싱
       if (inputRef.current) {
         inputRef.current.focus();
       }
+      // 함수 실행 중단
       return;
     } else {
       if (inputImage) {
-        changeFamilyImage();
+       changeFamilyImage();
       } else {
         if (inputName !== familyName) {
           changeFamilyName();
         } else {
-          handleFinishModal();
+         handleFinishModal();
         }
       }
     }
@@ -114,10 +111,12 @@ const FamilyProfile = (props: {
     if (inputImage) {
       formData.append("file", inputImage);
       formData.append("fileType", "FAMILY_PROFILE");
+      console.log(formData);
 
       changeFamilyImageApi(
         formData,
         (res: AxiosResponse<any>) => {
+          console.log(res);
           setStringImage(inputStringImage);
 
           if (inputName !== familyName) {
@@ -143,11 +142,12 @@ const FamilyProfile = (props: {
     changeFamilyNameApi(
       data,
       (res: AxiosResponse<any>) => {
+        console.log(res);
         setFamilyName(inputName);
         handleFinishModal();
       },
       (err: AxiosError<any>) => {
-        console.log(err);
+        console.log(err)
       }
     ).then().catch();
   }

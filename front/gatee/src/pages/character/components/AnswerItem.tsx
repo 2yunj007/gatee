@@ -12,8 +12,9 @@ const AnswerItem = ({question, index, isMine}: { question: Answer, index: number
         featureId: question.featureId,
         answer: answer
       }, res => {
+        console.log(res)
       }, err => {
-        console.log(err);
+        console.log(err)
       }
     )
     setEdit(false);

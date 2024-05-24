@@ -21,8 +21,10 @@ const SignupMemberSetFinish = () => {
         const json = JSON.parse(decode);
 
         if (json.authorities[0] === "ROLE_ROLE_USER") {
+          alert(`잘못된 접근입니다.`);
           navigate(`/main`);
         } else {
+          alert(`잘못된 접근입니다.`);
           navigate(`/kakao`);
         }
       }

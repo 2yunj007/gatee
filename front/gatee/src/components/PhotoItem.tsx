@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {IoHeart} from "react-icons/io5";
+import {IoHeartOutline} from "react-icons/io5";
 import {useFamilyStore} from "@store/useFamilyStore";
-import {useMemberStore} from "@store/useMemberStore";
 import {createReactionPhotoApi, deleteDetailPhotoApi, deleteReactionPhotoApi} from "@api/photo";
-import {IoHeart, IoHeartOutline} from "react-icons/io5";
+import {useMemberStore} from "@store/useMemberStore";
 import {RiDeleteBin6Line} from "react-icons/ri";
-
+import {useNavigate} from "react-router-dom";
 
 interface MemberReaction {
   memberId: string;
@@ -23,7 +23,7 @@ interface PhotoDetailData {
 const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
   const {myInfo} = useMemberStore()
   const [isPressed, setIsPressed] = useState(photoDetailData.isReaction);
-  const {familyInfo, familyId} = useFamilyStore()
+  const {familyInfo,familyId} = useFamilyStore()
   const [reactionList, setReactionList] = useState(photoDetailData.reactionList)
   const navigate = useNavigate();
   // 멤버 Id 받아서 아이콘 Url 반환하는 함수
@@ -39,6 +39,7 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
     createReactionPhotoApi(
       photoDetailData.photoId,
       res => {
+        console.log(res)
         setIsPressed(!isPressed);
         setReactionList(prevReactionList => {
           // memberId가 12인 원소가 이미 있는지 확인
@@ -52,7 +53,7 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
 
       },
       err => {
-        console.error(err);
+        console.log(err)
       }
     )
   }
@@ -62,6 +63,7 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
     deleteReactionPhotoApi(
       photoDetailData.photoId,
       res => {
+        console.log(res)
         setIsPressed(!isPressed);
         // API 호출 성공 시 reactionList 업데이트
         setReactionList(prevReactionList => {
@@ -70,7 +72,7 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
         });
       },
       err => {
-        console.error(err);
+        console.log(err)
       }
     )
   }
@@ -78,26 +80,49 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
   // 좋아요 누르기 함수
   const pressHeart = () => {
     if (!isPressed) {
-      createReactionPhotoApiFunc();
+      createReactionPhotoApiFunc()
     } else {
-      deleteReactionPhotoApiFunc();
+      deleteReactionPhotoApiFunc()
     }
   };
 
   const deletePhotoApiFunc = () => {
     deleteDetailPhotoApi(
-      photoDetailData.photoId, familyId,
+      photoDetailData.photoId,familyId,
       res => {
-        navigate("/photo");
+        console.log(res)
+        navigate("/photo")
       }, err => {
-        console.error(err);
-        navigate("/photo");
+        console.log(err)
+        navigate("/photo")
       })
   }
 
+  // 사진 다운받기 => 서버 주소로 변경하기
+  // const downloadPhoto = () => {
+  //   fetch(photoDetailData?.imageUrl)
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.blob();
+  //     })
+  //     .then(blob => {
+  //       const type = blob.type.split("/")[1]; // 이미지의 MIME 타입에서 "image/"를 제거하여 확장자 추출
+  //       const url = window.URL.createObjectURL(new Blob([blob], {type}));
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", `photo.${type}`); // 파일 이름에 이미지 확장자 추가
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //     })
+  //     .catch(error => console.error("Error downloading photo:", error));
+  // };
+
   useEffect(() => {
     setIsPressed(photoDetailData.isReaction);
-    setReactionList(photoDetailData.reactionList);
+    setReactionList(photoDetailData.reactionList)
   }, [photoDetailData]);
 
   return (
@@ -107,7 +132,7 @@ const PhotoItem = ({photoDetailData}: { photoDetailData: PhotoDetailData }) => {
 
       <div className="interaction--container">
         <div className={`liked--container${isPressed ? '--active' : ''}`}>
-          <IoHeart onClick={pressHeart} size={35}/>
+          <IoHeart onClick={pressHeart} size={35} />
 
           {/* 좋아요 누른 사람 */}
           <div className="liked-profiles--container">
