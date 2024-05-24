@@ -96,6 +96,8 @@ export const updateAlbumNameApi = async function (data: UpdateAlbumNameApiReq,
 export const uploadAlbumPhotoApi = async function (data: UploadAlbumPhotoApiReq,
                                                    success: (res: AxiosResponse<any>) => void,
                                                    fail: (err: AxiosError<any>) => void) {
+  console.log(`albums/${data.albumId}/photos`)
+  console.log(`photoIdList: ${data.photoIdList}`)
   await local.post(`albums/${data.albumId}/photos`, {photoIdList: data.photoIdList}).then(success).catch(fail);
 }
 

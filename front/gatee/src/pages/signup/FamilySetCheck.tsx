@@ -19,9 +19,11 @@ const SignupFamilySetCheck = () => {
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
+        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyName) {
+          alert('먼저 가족을 소개해주세요!');
           navigate(`/signup/family-set`);
         }
       }

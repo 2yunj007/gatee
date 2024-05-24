@@ -1,12 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-
 interface ObserverOptions {
   fetcher: () => void;
   dependency: any;
   isLoading: boolean;
 }
-
 
 const useObserver = (options: ObserverOptions) => {
   const { fetcher, dependency, isLoading } = options;

@@ -1,20 +1,19 @@
 import React from "react";
 import CameraIcon from "@assets/images/icon3D/camera.png"
+// import SmileIcon from "@assets/images/icon3D/smile.png"
 import TargetIcon from "@assets/images/icon3D/target.png"
 import CalendarIcon from "@assets/images/icon3D/calendar.png"
 import PencilIcon from "@assets/images/icon3D/pencil.png"
 import {Link} from "react-router-dom";
 import {FaCheckCircle} from "react-icons/fa";
+
 import ProgressBar from "@ramonak/react-progress-bar";
 import getContentFromMission from "@utils/getContentFromMission";
 import {completeMissionApi} from "@api/mission";
 import {MissionListApiReq} from "@type/index";
 
 
-const MissionItem = ({mission, handleSubmitMission}: {
-  mission: MissionListApiReq,
-  handleSubmitMission: () => void
-}) => {
+const MissionItem = ({mission, handleSubmitMission}: { mission: MissionListApiReq, handleSubmitMission: () => void }) => {
   const iconImg = () => {
     let icon;
     let destination;
@@ -51,9 +50,10 @@ const MissionItem = ({mission, handleSubmitMission}: {
   // 미션 제출
   const submitMission = () => {
     completeMissionApi({type: mission.type}, res => {
-      handleSubmitMission();
+      console.log(res)
+      handleSubmitMission()
     }, err => {
-      console.log(err);
+      console.log(err)
     })
   }
 
@@ -63,7 +63,7 @@ const MissionItem = ({mission, handleSubmitMission}: {
         {icon}
         {!mission.isComplete ?
           <div className="mission-content">
-            {/* 미션명 + 미션 하러 가기 버튼 */}
+            {/* 미션명 + 미션 하러가기 버튼 */}
             <div className="mission__name-container">
               <div className="title">{content}
               </div>
@@ -92,9 +92,12 @@ const MissionItem = ({mission, handleSubmitMission}: {
               {/*미션 완료 버튼*/}
               <button onClick={() => submitMission()} className="mission__complete-button">다음 미션</button>
             </div>
+
           </div>
         }
+
       </div>
+
     </div>
   );
 }

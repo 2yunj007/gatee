@@ -1,26 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
 import Header from "./components/Header";
-import {getDetailExamResultApi} from "@api/exam";
 import QuestionScored from "./components/QuestionItem";
 import getScoreImage from "@utils/getScoreImage";
+// import {transformedExamList} from "@constants/index";
+import {Link, useParams} from "react-router-dom";
+import {getDetailExamResultApi} from "@api/exam";
 import {TransformedQuestionData} from "@type/index";
-
+// import {useMemberStore} from "@store/useMemberStore";
 
 const ExamScored = () => {
-  const params = useParams();
-  const [examDetailResult, setExamDetailResult] = useState<TransformedQuestionData[]>([]);
-  const [score, setScore] = useState<number>(0);
+  const params = useParams()
+  const [examDetailResult,setExamDetailResult] = useState<TransformedQuestionData[]>([])
+  const [score,setScore] = useState(0)
 
   useEffect(() => {
-    if (params.examId) {
+    if (params.examId){
       getDetailExamResultApi(params.examId,
-        res => {
-          setExamDetailResult(res.data.examData);
-          setScore(res.data.score);
+        res=>{
+        console.log("getDetailExamResultApi",res)
+
+          setExamDetailResult(res.data.examData)
+          setScore(res.data.score)
         },
-        err => {
-          console.error(err);
+        err=>{
+        console.log(err)
         })
     }
   }, [params]);
@@ -38,9 +41,9 @@ const ExamScored = () => {
             <Grade score={score}/>
 
             {examDetailResult.map((item, index) => {
-              return (<QuestionScored key={index} questionNumber={index} question={item}
-              />)
-            })}
+              return (<QuestionScored key={ index } questionNumber={index} question={ item }
+              />)})}
+
 
             {/* 하단의 줄 두개 */}
             <div className="exam__scored-footer">
@@ -51,11 +54,26 @@ const ExamScored = () => {
             </Link>
           </>
       }
+
+
     </div>
   );
 }
 
-const Grade = ({score}: { score: number }) => {
+// const ExamComment: React.FC<{ comment: { memberName:string, comment:string} }> = ({comment})=>{
+//   return(
+//     <div className="exam__scored-comment">
+//     <img src="" alt="프사"/>
+//     <div className="comment">
+//       <p className="text-gray-100">{comment.memberName}</p>
+//       <p>{comment.comment}</p>
+//     </div>
+//   </div>)
+//
+// }
+
+const Grade = ({score}: { score:number }) => {
+  // const score: number = 90
   return (
     <div className="exam__scored-mark">
       {/* 점수 */}

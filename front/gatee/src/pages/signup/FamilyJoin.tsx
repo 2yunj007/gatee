@@ -59,6 +59,7 @@ const SignupFamilyJoin = () => {
         familyCode: code
       },
       (res: AxiosResponse<any>) => {
+        console.log(res);
         setFamilyCode(code);
         setFamilyId(res.data.familyId);
         setFamilyName(res.data.familyName);

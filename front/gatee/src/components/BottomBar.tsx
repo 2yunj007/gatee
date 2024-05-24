@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {NavLink} from "react-router-dom";
-import NotificationBadge from "@components/NotificationBadge";
-import {useChatStore} from "@store/useChatStore";
-import {ReactComponent as HomeIcon} from "@assets/images/icons/ic_home.svg"
-import {PiGraduationCap, PiCalendar, PiChatCenteredDots, PiImage} from "react-icons/pi";
+import { NavLink } from "react-router-dom";
+import {ReactComponent as HomeIcon } from "@assets/images/icons/ic_home.svg"
+import { PiGraduationCap, PiCalendar, PiChatCenteredDots, PiImage } from "react-icons/pi";
 import firebase from "../firebase-config";
 import 'firebase/database';
+import NotificationBadge from "@components/NotificationBadge";
+import { useChatStore } from "@store/useChatStore";
 
 const BottomBar = () => {
-  const {isNewMessage} = useChatStore();
+  const { isNewMessage } = useChatStore();
 
   return (
     <div className="bottom-bar">
@@ -26,7 +26,7 @@ const BottomBar = () => {
       }>
         <div className="bottom-bar__item-chat">
           <PiChatCenteredDots size={25}/>
-          {isNewMessage && <NotificationBadge/>}
+          { isNewMessage && <NotificationBadge />}
         </div>
         <span>채팅</span>
       </NavLink>
@@ -47,14 +47,14 @@ const BottomBar = () => {
         <span>일정</span>
       </NavLink>
 
-      {/*앨범*/}
-      <NavLink to="/photo" className={({isActive}) =>
-        isActive ? 'bottom-bar__item--active' : 'bottom-bar__item'
-      }>
-        <PiImage size={25}/>
-        <span>앨범</span>
-      </NavLink>
-    </div>
+        {/*앨범*/}
+        <NavLink to="/photo" className={({isActive}) =>
+          isActive ? 'bottom-bar__item--active' : 'bottom-bar__item'
+        }>
+          <PiImage size={25}/>
+          <span>앨범</span>
+        </NavLink>
+      </div>
 
   )
 }

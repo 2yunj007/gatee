@@ -1,11 +1,10 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import {useFamilyStore} from "@store/useFamilyStore";
+import {Link} from "react-router-dom";
 import BookIcon from "@assets/images/icon3D/dictionary.png";
 
 const CharacterFamilyList = () => {
-  const {familyInfo, familyName} = useFamilyStore();
-
+  const {familyInfo, familyName} = useFamilyStore()
   return (
     <div className="character-family-list">
       <h1 className="character-family-list-title">{familyName}의 서재</h1>

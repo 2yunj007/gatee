@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AiOutlineMan} from "react-icons/ai";
-import {AiOutlineWoman} from "react-icons/ai";
-import dayjs, {Dayjs} from 'dayjs';
-import {DateField} from '@mui/x-date-pickers/DateField';
-import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
-import {useMemberStore} from "@store/useMemberStore";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AiOutlineMan } from "react-icons/ai";
+import { AiOutlineWoman } from "react-icons/ai";
+import dayjs, { Dayjs } from 'dayjs';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { useMemberStore } from "@store/useMemberStore";
 import base64 from "base-64";
-import {useFamilyStore} from "@store/useFamilyStore";
+import { useFamilyStore } from "@store/useFamilyStore";
 
 const SignupMemberSetBirth = () => {
   const navigate = useNavigate();
   const accessToken: string | null = localStorage.getItem("accessToken");
-  const {familyName} = useFamilyStore();
-  const {
-    myInfo, setMyInfo,
+  const { familyName } = useFamilyStore();
+  const { myInfo, setMyInfo,
     name,
     birth,
     birthType,
@@ -32,17 +31,20 @@ const SignupMemberSetBirth = () => {
   // 권한에 따라 redirect
   useEffect(() => {
     if (accessToken) {
-      const payload: string = accessToken.substring(accessToken.indexOf('.') + 1, accessToken.lastIndexOf('.'));
+      const payload: string = accessToken.substring(accessToken.indexOf('.')+1,accessToken.lastIndexOf('.'));
       const decode = base64.decode(payload);
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
+        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyName) {
+          alert('먼저 가족을 소개해주세요!');
           navigate(`/signup/family-set`);
         } else {
           if (!myInfo) {
+            alert('먼저 이름을 입력해주세요!');
             navigate(`/signup/member-set`);
           }
         }
@@ -100,15 +102,15 @@ const SignupMemberSetBirth = () => {
   // 음력 양력 바꾸기
   const changeBirthType = (birthType: string) => {
     if (birthType === "SOLAR") {
-      setBirthType("LUNAR");
+      setBirthType("LUNAR")
     } else {
-      setBirthType("SOLAR");
+      setBirthType("SOLAR")
     }
   }
 
   // 역할 초기화
   useEffect(() => {
-    setRole(null);
+    setRole(null)
   }, [gender]);
 
   // 다음으로 가기
@@ -146,8 +148,7 @@ const SignupMemberSetBirth = () => {
                 onChange={handleSetSelectedDateChange}
                 inputProps={{
                   style: {
-                    textAlign: "center", fontSize: "22px"
-                  },
+                    textAlign: "center", fontSize: "22px" },
                 }}
                 sx={dateFieldCustom}
                 maxDate={dayjs()}

@@ -52,6 +52,7 @@ const SignupAuth = () => {
         }
       },
       (res: AxiosResponse<any>): void => {
+        console.log(res.data.access_token);
         // 카카오 토큰으로 우리 서버 토큰 발급하기
         tokenChange(res.data.access_token);
       },
@@ -81,6 +82,8 @@ const SignupAuth = () => {
         // 이름에 카카오 닉네임 저장
         const name = res.data.name;
         setName(name);
+        console.log(name);
+        console.log(res.data.redirectUrl);
 
         // 멤버의 상태에 따라 적절한 위치로 보내기
         navigate(res.data.redirectUrl);

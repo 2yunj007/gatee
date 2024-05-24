@@ -1,5 +1,5 @@
 import React from 'react';
-import {BsThreeDotsVertical} from "react-icons/bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface HandleFinishTab {
   handleFinishTab: (event: React.MouseEvent<HTMLButtonElement>) => void

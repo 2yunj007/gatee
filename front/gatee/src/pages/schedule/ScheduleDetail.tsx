@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import dayjs from "dayjs";
-import {ScheduleDetailRes, ScheduleRecord, ScheduleType} from "@type/index";
 import {
   applyScheduleParticipationApi,
   cancelScheduleParticipationApi,
@@ -10,18 +9,19 @@ import {
   deleteRecordApi,
 } from "@api/schedule";
 import {useFamilyStore} from "@store/useFamilyStore";
-import {useMemberStore} from "@store/useMemberStore";
-import getColorInfo from "@utils/getColorCode";
-import calculateWeekday from "@utils/calculateWeekday";
+import {ScheduleDetailRes, ScheduleRecord, ScheduleType} from "@type/index";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import Card from '@mui/material/Card';
+import getColorInfo from "@utils/getColorCode";
+import calculateWeekday from "@utils/calculateWeekday";
+import {BsTextParagraph} from "react-icons/bs";
+import {HiOutlineDotsHorizontal} from "react-icons/hi";
+import {useMemberStore} from "@store/useMemberStore";
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import {RiDeleteBin6Line} from "react-icons/ri";
-import {BsTextParagraph} from "react-icons/bs";
-import {HiOutlineDotsHorizontal} from "react-icons/hi";
 
 
 function ScheduleDetail() {
@@ -142,7 +142,7 @@ function ScheduleDetail() {
           });
         },
         (err) => {
-          console.error(err);
+          console.log(err);
         }
       )
     }
@@ -317,16 +317,14 @@ function ScheduleDetail() {
               <div
                 className={`schedule-detail__record__image${record.scheduleRecordPhotoResList && record.scheduleRecordPhotoResList.length >= 2 ? '--multiple' : '--single'}`}>
                 {record.scheduleRecordPhotoResList.map((file: { photoId: number; imageUrl: string; }) => (
-                  <div className="schedule-detail__record__image__item" key={file.photoId}
-                       onClick={() => handlePhotoClick(file.photoId)}>
+                  <div className="schedule-detail__record__image__item" key={file.photoId} onClick={() => handlePhotoClick(file.photoId)}>
                     <img src={file.imageUrl} alt=""/>
                   </div>
                 ))}
               </div>
 
-              <div className="schedule-detail__record__delete"
-                   onClick={() => handleRecordDeleteClick(record.scheduleRecordId)}>
-                <RiDeleteBin6Line size={20}/>
+              <div className="schedule-detail__record__delete" onClick={() => handleRecordDeleteClick(record.scheduleRecordId)}>
+                <RiDeleteBin6Line size={20} />
               </div>
             </Card>
           );

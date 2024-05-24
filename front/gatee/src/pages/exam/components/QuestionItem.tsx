@@ -14,7 +14,7 @@ const QuestionScored = (
   return (
     <div className="exam__item">
       {/* 채점 */}
-      <Mark result={question?.choiceNumber === question?.correctNumber}/>
+      <Mark result={question?.choiceNumber===question?.correctNumber}/>
 
       {/* 문제 */}
       <div className="exam__item__question">
@@ -30,9 +30,9 @@ const QuestionScored = (
             <div className={question?.choiceNumber === i + 1 ? "activate-index" : "deactivate-index"}>
               {i + 1}
             </div>
-            {question?.correctNumber === i + 1 ?
+            {question?.correctNumber === i+1 ?
               <CheckImg className="exam__item__checkImg"/>
-              :
+            :
               null
             }
 
@@ -47,7 +47,7 @@ const QuestionScored = (
   );
 };
 
-const Mark = ({result}: { result: boolean }) => {
+const Mark = ({result}: { result:boolean }) => {
 
   return (
     <div className="exam__result__mark">

@@ -1,43 +1,37 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {AxiosError, AxiosResponse} from "axios";
-import dayjs from "dayjs";
-import FeelingToast from "@pages/profile/components/FeelingToast";
-import {createFamilyCodeApi, getMyDataApi} from "@api/member";
-import {getFamilyAnsweredAskApi} from "@api/dictionary";
-import {naggingApi} from "@api/notification";
-import {ReactComponent as PencilIcon} from "@assets/images/icons/ic_pencil.svg";
-import {ReactComponent as Book} from "@assets/images/character/book.svg";
-import {useModalStore} from "@store/useModalStore";
-import {useMemberStore} from "@store/useMemberStore";
-import {useFamilyStore} from "@store/useFamilyStore";
-import {useDictStore} from "@store/useDictStore";
-import useModal from "@hooks/useModal";
-import getMoodContent from "@utils/getMoodContent";
-import {IoMdRefresh} from "react-icons/io";
-import {FaPhone} from "react-icons/fa";
-import {Dictionary} from "@fullcalendar/core/internal";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaPhone } from "react-icons/fa";
+import { ReactComponent as PencilIcon } from "@assets/images/icons/ic_pencil.svg";
+import { ReactComponent as Book} from "@assets/images/character/book.svg";
+import { useModalStore } from "@store/useModalStore";
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-
+import FeelingToast from "@pages/profile/components/FeelingToast";
+import { useMemberStore } from "@store/useMemberStore";
+import { useFamilyStore } from "@store/useFamilyStore";
+import { useDictStore } from "@store/useDictStore";
+import dayjs from "dayjs";
+import { createFamilyCodeApi, getMyDataApi } from "@api/member";
+import { AxiosError, AxiosResponse } from "axios";
+import { getFamilyAnsweredAskApi } from "@api/dictionary";
+import useModal from "@hooks/useModal";
+import getMoodContent from "@utils/getMoodContent";
+import { Dictionary } from "@fullcalendar/core/internal";
+import { IoMdRefresh } from "react-icons/io";
+import {naggingApi} from "@api/notification";
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-
 const ProfileIndex = () => {
   const navigate = useNavigate();
-
   // 모달 상태 적용
-  const {setShowModal} = useModalStore();
-
-  const {myInfo, setMyInfo} = useMemberStore();
-  const {familyInfo, setFamilyCode} = useFamilyStore();
-  const {askList, setAskList} = useDictStore();
-
+  const { setShowModal } = useModalStore();
+  const { myInfo, setMyInfo } = useMemberStore();
+  const { familyInfo, setFamilyCode } = useFamilyStore();
+  const { askList, setAskList } = useDictStore();
   // 쿼리스트링으로 넘어온 이메일을 확인하기 위함
-  const {email} = useParams<{ email: string }>();
-
-  const {isOpen, openModal, closeModal} = useModal();
+  const { email } = useParams<{ email: string }>();
+  const { isOpen, openModal, closeModal } = useModal();
 
   // 열린지 닫힌지 상태 확인 가능
   const [state, setState] = useState({
@@ -75,7 +69,8 @@ const ProfileIndex = () => {
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
       (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (open === true) {
+        console.log(anchor)
+        if (open === true){
           setShowModal(true)
         } else {
           setShowModal(false)
@@ -92,7 +87,7 @@ const ProfileIndex = () => {
       };
 
   // 설정 탭에서 완료 버튼 누를 때 팝업 내리기
-  const handleFinishTab = (event: React.MouseEvent) => {
+  const handleFinishTab = (event:React.MouseEvent) => {
     toggleDrawer('bottom', false)(event);
   }
 
@@ -104,7 +99,7 @@ const ProfileIndex = () => {
       }}
       role="presentation"
       onKeyDown={toggleDrawer(anchor, false)}
-      style={{backgroundColor: "#7B7B7B"}}
+      style={{backgroundColor:"#7B7B7B"}}
     >
       {/* 토스트 팝업 되는 컴포넌트 넣기 */}
       <FeelingToast handleFinishTab={handleFinishTab}/>
@@ -115,8 +110,9 @@ const ProfileIndex = () => {
   const saveMemberData = () => {
     getMyDataApi(
       (res) => {
+        console.log("내 정보 조회",res.data)
         // 스토어에 저장
-        setMyInfo(res.data);
+        setMyInfo(res.data)
       },
       (err) => {
         console.log(err);
@@ -131,6 +127,8 @@ const ProfileIndex = () => {
         familyId: myInfo.familyId,
       },
       (res: AxiosResponse<any>) => {
+        console.log("코드 생성 성공", res);
+        // 가족 코드 집어넣기
         setFamilyCode(res.data.familyCode);
         navigate("/signup/member-set/share", {
           state: {
@@ -167,6 +165,7 @@ const ProfileIndex = () => {
       getFamilyAnsweredAskApi(
         memberFamilyId,
         (res: AxiosResponse<any>) => {
+          console.log("다른 사람 백과사전 푼 문제 상태", res);
           setAskList(res.data);
           getRandomQuestion(res.data);
         },
@@ -176,7 +175,7 @@ const ProfileIndex = () => {
       )
     }
   }
-
+  
   // 랜덤 문제 만들기
   const getRandomQuestion = (arr: Dictionary[]) => {
     if (!arr.length) {
@@ -191,7 +190,7 @@ const ProfileIndex = () => {
   const goToCharacter = () => {
     navigate(`/character/start/${familyMember?.memberFamilyId}`);
   }
-
+  
   // 한마디 보내기
   const sendNaggingMessage = () => {
     const content: string = "백과사전 만들어!"
@@ -201,12 +200,13 @@ const ProfileIndex = () => {
           receiverId: familyMember?.memberId,
           message: content
         }, res => {
+          console.log(res);
           alert(`사전을 만들어 달라고 했어요!`)
         }, err => {
           console.log(err);
           // 로딩
           setLoading(true)
-          setTimeout(() => setLoading(false), 1000);
+          setTimeout(()=>setLoading(false), 1000)
         }
       )
     }
@@ -260,7 +260,7 @@ const ProfileIndex = () => {
                 className="profile__nickname__part--02"
                 onClick={goToModify}
               >
-                <PencilIcon className="icon"/>
+                <PencilIcon className="icon" />
               </button>
             ) : (
               null
@@ -396,7 +396,7 @@ const ProfileIndex = () => {
                       className="phone__body__part--02"
                       href={`tel:${myInfo.phoneNumber}`}
                     >
-                      <FaPhone className="icon"/>
+                      <FaPhone className="icon" />
                     </a>
                   </>
                 ) : (
@@ -414,7 +414,7 @@ const ProfileIndex = () => {
                       className="phone__body__part--02"
                       href={`tel:${familyMember?.phoneNumber}`}
                     >
-                      <FaPhone className="icon"/>
+                      <FaPhone className="icon" />
                     </a>
                   </>
                 ) : (
@@ -505,13 +505,16 @@ const ProfileIndex = () => {
                 <div className="created__character-box__top">
                 </div>
                 <div className="character-box__header">
-                  <div className="header__part--01">
-                    &nbsp;{randomQuestion ? (
-                    randomQuestion.question
-                  ) : (
-                    null
-                  )}
-                  </div>
+                <div className="header__part--01">
+                  &nbsp;{randomQuestion ? (
+                  randomQuestion.question
+                ) : (
+                  null
+                )}
+                </div>
+                {/*  <span className="header__part--02">*/}
+
+                {/*</span>*/}
                 </div>
                 <div className="character-box__body--01">
                 <span className="body--01--text">
@@ -534,7 +537,7 @@ const ProfileIndex = () => {
                 </div>
               </div>
             </div>
-
+            
           ) : (
             // 내 프로필이 아닐 때
             <div className="character__created">
@@ -559,13 +562,13 @@ const ProfileIndex = () => {
                 <div className="created__character-box__top">
                 </div>
                 <div className="character-box__header">
-                  <div className="header__part--01">
-                    &nbsp;{randomQuestion ? (
-                    randomQuestion.question
-                  ) : (
-                    null
-                  )}
-                  </div>
+                <div className="header__part--01">
+                   &nbsp;{randomQuestion ? (
+                  randomQuestion.question
+                ) : (
+                  null
+                )}
+                </div>
                 </div>
                 <div className="character-box__body--01">
                 <span className="body--01--text">
@@ -590,7 +593,19 @@ const ProfileIndex = () => {
             </div>
           )
         )}
+
       </div>
+
+      {/*한마디 보내기*/}
+      {/*{isOpen ? (*/}
+      {/*  // <NaggingModal*/}
+      {/*  //   notificationData={familyMember}*/}
+      {/*  //   handleModal={handleModal}*/}
+      {/*  // />*/}
+      {/*) : (*/}
+      {/*  null*/}
+      {/*)}*/}
+
     </div>
   );
 }

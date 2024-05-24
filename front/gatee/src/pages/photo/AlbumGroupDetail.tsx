@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useOutletContext, useParams} from "react-router-dom";
-import AlbumDetailPhotoList from "@pages/photo/components/AlbumDetailPhotoList";
 import {PhotoOutletInfoContext} from "@type/index";
 import {getAlbumDetailApi, updateAlbumNameApi} from "@api/photo";
 import {useFamilyStore} from "@store/useFamilyStore";
+import AlbumDetailPhotoList from "@pages/photo/components/AlbumDetailPhotoList";
 import {usePhotoStore} from "@store/usePhotoStore";
 
 
 const PhotoAlbumGroupDetail = () => {
-  const params = useParams();
-  const {familyId} = useFamilyStore();
+  const params = useParams()
+  const {familyId} = useFamilyStore()
   const {editMode, handleChecked} = useOutletContext<PhotoOutletInfoContext>();
-  const [albumName, setAlbumName] = useState<string>('');
-  const {detailAlbumPhotoGroup, setDetailAlbumPhotoGroup} = usePhotoStore();
-
+  const [albumName, setAlbumName] = useState<string>('')
+  const {detailAlbumPhotoGroup,setDetailAlbumPhotoGroup} = usePhotoStore()
   // 이름 변경 api
   const changeAlbumNameApiFunc = (newName: string) => {
     if (params?.id) {
@@ -23,9 +22,10 @@ const PhotoAlbumGroupDetail = () => {
           name: newName
         },
         res => {
+          console.log(res)
         },
         err => {
-          console.log(err);
+          console.log(err)
         }
       )
     }
@@ -38,11 +38,12 @@ const PhotoAlbumGroupDetail = () => {
       id,
       {familyId: familyId},
       res => {
+        console.log(res)
         setDetailAlbumPhotoGroup(res.data);
 
       },
       err => {
-        console.log(err);
+        console.log(err)
       }
     )
   }
@@ -50,8 +51,8 @@ const PhotoAlbumGroupDetail = () => {
   // 마운트 되자마자 앨범 이름과 앨범 상세 데이터 가져오기
   useEffect(() => {
     if (params?.id && params?.name) {
-      setAlbumName(params?.name);
-      getAlbumDetailApiFunc(params.id);
+      setAlbumName(params?.name)
+      getAlbumDetailApiFunc(params.id)
     }
   }, [params]);
 

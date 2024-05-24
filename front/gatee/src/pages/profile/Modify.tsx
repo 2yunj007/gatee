@@ -1,46 +1,39 @@
 import React, { useRef, useState } from 'react';
+import { FaCamera } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { AxiosResponse, AxiosError } from "axios";
-import dayjs, { Dayjs } from 'dayjs';
-import ProfileCropper from "@pages/profile/components/Cropper";
-import {modifyProfileApi, modifyProfileImageApi} from "@api/profile";
-import { useMemberStore } from "@store/useMemberStore";
 import useModal from "@hooks/useModal";
-import { imageResizer } from "@utils/imageResizer";
-import { FormControlLabel } from "@mui/material";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import Checkbox from "@mui/material/Checkbox";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FaCamera } from "react-icons/fa";
-
+import { FormControlLabel } from "@mui/material";
+import { useMemberStore } from "@store/useMemberStore";
+import ProfileCropper from "@pages/profile/components/Cropper";
+import {modifyProfileApi, modifyProfileImageApi} from "@api/profile";
+import { AxiosResponse, AxiosError } from "axios";
+import { imageResizer } from "@utils/imageResizer";
 
 const ProfileModify = () => {
   const navigate = useNavigate();
   const sender: string = "profile"
   // 쿼리스트링으로 넘어온 이름을 확인하기 위함
-  const { myInfo, setMyInfo, memberImage, stringMemberImage } = useMemberStore();
+  const { myInfo, setMyInfo, memberImage, stringMemberImage } = useMemberStore()
 
   // 이미지 관련
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropImage, setCropImage] = useState<string>("");
-
   // 닉네임 관련
   const [inputNickname, setInputNickname] = useState<string>(myInfo?.nickname);
-
   // 이름 관련
   const [inputName, setInputName] = useState(myInfo?.name);
-
   // 역할 관련
   const [inputRole, setInputRole] = useState<string>(myInfo?.role);
-
   // 생일 관련
   const [inputBirthDay, setInputBirthDay] = useState<string>(myInfo?.birth);
-
-  // 캘린더 타입
+  // 캘린더타입
   const [inputBirthType, setInputBirthType] = useState<string>(myInfo?.birthType)
-
   // 전화번호 관련
   const [inputPhoneNumber, setInputPhoneNumber] = useState<string>(myInfo?.phoneNumber === null ? "" : myInfo?.phoneNumber)
 
@@ -85,6 +78,7 @@ const ProfileModify = () => {
     modifyProfileImageApi(
       formData,
       (res: AxiosResponse<any>) => {
+        console.log("이미지 수정 성공", res);
         // 회원 정보 수정
         modifyProfile();
       },
@@ -107,10 +101,11 @@ const ProfileModify = () => {
         phoneNumber: inputPhoneNumber
       },
       (res: AxiosResponse<any>) => {
+        console.log("회원 정보 수정 성공", res);
         navigate(`/profile/${myInfo.email}`);
       },
       (err: AxiosError<any>) => {
-        console.log(err);
+        console.log(err)
       },
     ).then().catch();
   }
@@ -127,11 +122,9 @@ const ProfileModify = () => {
     const file: File | null = e.target.files ? e.target.files[0] : null;
     if (file) {
       const resizedFile: File = (await imageResizer(file, 2000, 2000)) as File;
-
       // 크롭할 이미지 넣기
       const jpgUrl = URL.createObjectURL(resizedFile);
       setCropImage(jpgUrl);
-
       // 모달 열기
       openImageModal();
     }
@@ -159,23 +152,23 @@ const ProfileModify = () => {
 
   const handleNameModal = (name: string): void => {
     setInputName(name);
-    closeNameModal();
+    closeNameModal()
   }
 
   const handleRoleModal = (role: string): void => {
     setInputRole(role);
-    closeRoleModal();
+    closeRoleModal()
   }
 
   const handleBirthModal = (birth: string, birthType: string): void => {
     setInputBirthDay(birth);
-    setInputBirthType(birthType);
-    closeBirthModal();
+    setInputBirthType(birthType)
+    closeBirthModal()
   }
 
   const handlePhoneModal = (phone: string): void => {
     setInputPhoneNumber(phone);
-    closePhoneModal();
+    closePhoneModal()
   }
 
 
@@ -353,8 +346,9 @@ const ProfileModify = () => {
 
 // 이름 모달
 const NameModal = ({handleNameModal, name}: { handleNameModal: (name: string) => void, name: string }) => {
-  // 입력상태 - 스토어로 변경할 것
-  const [inputValue, setInputValue] = useState<string>(name);
+
+  // 입력상태 - 스토어로 변경할것
+  const [inputValue, setInputValue] = useState(name);
 
 // 입력값이 변경될 때 호출되는 함수
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,11 +377,11 @@ const NameModal = ({handleNameModal, name}: { handleNameModal: (name: string) =>
 
 // 역할 모달
 const RoleModal = ({handleRoleModal, role}: { handleRoleModal: (role: string) => void, role: string }) => {
-  const roles: string[] = ["엄마", "아빠", "아들", "딸"];
+  const roles = ["엄마", "아빠", "아들", "딸"];
   const [inputRole, setInputRole] = useState<string>(role);
-  const [isClickedEtc, setIsClickedEtc] = useState<boolean>(!roles.includes(inputRole));
+  const [isClickedEtc, setIsClickedEtc] = useState<boolean>(!roles.includes(inputRole) );
 
-  // 입력 값이 변경될 때 호출되는 함수
+// 입력값이 변경될 때 호출되는 함수
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputRole(event.target.value);
   };
@@ -395,7 +389,7 @@ const RoleModal = ({handleRoleModal, role}: { handleRoleModal: (role: string) =>
   return (
     <div className="modal__bg" onClick={() => {
       if (inputRole !== null && inputRole.trim().length !== 0)
-        handleRoleModal(inputRole);
+        handleRoleModal(inputRole)
     }}>
       <div className="modal__content">
         {/*역할*/}
@@ -496,8 +490,8 @@ const BirthModal = ({handleBirthModal, birth, birthType}: {
   birthType: string
 }) => {
 
-  const [birthday, setBirthday] = useState<string>(birth);
-  const [inputBirthType, setInputBirthType] = useState<string>(birthType);
+  const [birthday, setBirthday] = useState(birth)
+  const [inputBirthType, setInputBirthType] = useState(birthType)
   const dateFieldCustom = {
     "& .MuiOutlinedInput-root": {
       color: "#fff",
@@ -586,15 +580,14 @@ const BirthModal = ({handleBirthModal, birth, birthType}: {
 }
 
 const PhoneModal = ({handlePhoneModal, phone}: { handlePhoneModal: (phone: string) => void, phone: string }) => {
+  // 입력상태 - 스토어로 변경할것
   const [inputPhone, setInputValue] = useState(phone);
 
 // 입력값이 변경될 때 호출되는 함수
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-
     // 숫자만 남기도록 입력값 필터링
     const filteredInput = input.replace(/\D/g, '');
-
     // 전화번호 형식에 맞게 포맷팅
     const formattedInput = filteredInput.replace(/(\d{3})(\d{1,4})?(\d{1,4})?/, function (_, p1, p2, p3) {
       let formatted = '';
@@ -608,7 +601,7 @@ const PhoneModal = ({handlePhoneModal, phone}: { handlePhoneModal: (phone: strin
   return (
     <div className="modal__bg" onClick={() => {
       if (inputPhone !== null && inputPhone.trim().length) {
-        handlePhoneModal(inputPhone);
+        handlePhoneModal(inputPhone)
       }
     }}>
       <input type="tel"

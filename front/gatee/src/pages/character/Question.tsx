@@ -1,22 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import NewQuestionNotFound from "@pages/character/components/NewQuestionNotFound";
-import Loading from "@components/Loading";
 import {useDictStore} from "@store/useDictStore";
-import {useMemberStore} from "@store/useMemberStore";
-import {doMissionApi} from "@api/mission";
 import {getNewDictAskApi, sumbitAskAnswerApi} from "@api/dictionary";
 import TextField from "@mui/material/TextField";
+import {useMemberStore} from "@store/useMemberStore";
+import {doMissionApi} from "@api/mission";
+import NewQuestionNotFound from "@pages/character/components/NewQuestionNotFound";
+import Loading from "@components/Loading";
 
 const CharacterQuestion = () => {
   const navigate = useNavigate();
-  const {askList, askIndex, setAskIndex, setAskList} = useDictStore();
-  const [isEmpty, setEmpty] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>('');
-  const [warning, setWarning] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false)
-  const {myInfo} = useMemberStore();
-
+  const {askList, askIndex, setAskIndex, setAskList} = useDictStore()
+  const [isEmpty, setEmpty] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [warning, setWarning] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const {myInfo} = useMemberStore()
   const muiFocusCustom = {
     "& .MuiOutlinedInput-root": {
       fontSize: "1.2rem",
@@ -32,87 +31,94 @@ const CharacterQuestion = () => {
       }
     }
   };
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 건너뛰기 버튼
   const skip = () => {
+    console.log("다음 질문");
     if (askIndex < askList.length - 1) {
-      setAskIndex(askIndex + 1);
+      setAskIndex(askIndex + 1)
     } else {
-      navigate(`/character/start/${myInfo.memberFamilyId}`);
+      navigate(`/character/start/${myInfo.memberFamilyId}`)
     }
   }
 
-  // 제출 후 다음 질문
+  // 제출 후 다음질문
   const submitHandler = () => {
     if (inputValue.trim().length === 0) {
-      setWarning(true);
-      return;
+      setWarning(true)
+      return
     }
     if (askIndex < askList.length - 1) {
-      sumbitAskAnswerApiFunc(inputValue);
+      sumbitAskAnswerApiFunc(inputValue)
     } else {
-      sumbitAskAnswerApiFunc(inputValue);
-      setAskIndex(0);
+      sumbitAskAnswerApiFunc(inputValue)
+      setAskIndex(0)
     }
   }
   // 그만할래요
   const quitDictionary = () => {
-    setAskIndex(0);
-    navigate(`/character/start/${myInfo.memberFamilyId}`);
+    setAskIndex(0)
+    navigate(`/character/start/${myInfo.memberFamilyId}`)
   }
 
   // 답변 제출
   const sumbitAskAnswerApiFunc = (input: string) => {
-    setAskIndex(askIndex + 1);
-    setInputValue("");
-
+    setAskIndex(askIndex + 1)
+    setInputValue("")
     // 미션 수행
-    doMissionApiFunc();
-    setWarning(false);
-
+    doMissionApiFunc()
+    setWarning(false)
     sumbitAskAnswerApi(
       {
         featureId: askList[askIndex].featureId,
         answer: input
       }, res => {
+        console.log("제출");
+        console.log("다음 질문");
+
       }, err => {
-        console.log(err);
+        console.log(err)
         // 로딩
-        setLoading(true);
-        setTimeout(() => setLoading(false), 1000);
+        setLoading(true)
+        setTimeout(() => setLoading(false), 1000)
+        // setAskIndex(askIndex - 1)
+        // setInputValue(input)
       }
     )
   }
 
   // 미션 수행 api
   const doMissionApiFunc = () => {
+    console.log("미션")
     doMissionApi({type: "FEATURE", photoCount: null},
       res => {
-        // 마지막 질문일 때
+        console.log(res.data)
+        // 마지막 질문일때
         if (askIndex >= askList.length - 1) {
-          setLoading(true);
+          setLoading(true)
           setTimeout(() => {
-            setLoading(false);
-            navigate(`/character/start/${myInfo.memberFamilyId}`);
-          }, 500);
+            setLoading(false)
+            navigate(`/character/start/${myInfo.memberFamilyId}`)
+          }, 500)
         }
       }, err => {
-        console.log(err);
+        console.log(err)
       })
   }
 
 
   useEffect(() => {
     getNewDictAskApi(res => {
-        setAskList(res.data);
-        setIsLoading(false);
+        console.log(res)
+        setAskList(res.data)
+        setIsLoading(false)
         if (res.data.length === 0) {
-          setEmpty(true);
+          setEmpty(true)
         }
       },
       err => {
-        console.log(err);
+        console.log(err)
       }
     )
   }, []);
@@ -154,7 +160,6 @@ const CharacterQuestion = () => {
                        multiline
                        helperText={warning ? "빈칸은 제출할 수 없습니다" : " "}
                        onClick={(event) => event.stopPropagation()}/>
-
             {/*  다음 버튼 */}
             <button className="orangeButtonLarge" onClick={submitHandler}>
               {askIndex < askList.length - 1 ? "다음" : "제출"}

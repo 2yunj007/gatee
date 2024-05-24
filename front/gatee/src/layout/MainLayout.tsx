@@ -1,18 +1,18 @@
 import React, {useEffect} from "react";
-import {Outlet} from 'react-router-dom';
-import {Helmet, HelmetProvider} from 'react-helmet-async';
 import TopBar from '@components/TopBar';
 import BottomBar from "@components/BottomBar";
-import NotificationPopUp from "@components/NotificationPopup";
+import {Outlet} from 'react-router-dom'
+import {Helmet, HelmetProvider} from 'react-helmet-async';
 import {useModalStore} from "@store/useModalStore";
 import {useMemberStore} from "@store/useMemberStore";
 import {useFamilyStore} from "@store/useFamilyStore";
 import {useChatStore} from "@store/useChatStore";
 import {getFamilyMemberApi, getMyDataApi} from "@api/member";
-import {getPushAlarmByLocalStorageApi} from "@api/firebase";
 import firebase from "../firebase-config";
 import 'firebase/database';
+import NotificationPopUp from "@components/NotificationPopup";
 import {requestPermission} from "../firebase-messaging-sw";
+import {getPushAlarmByLocalStorageApi} from "@api/firebase";
 
 const MainLayout = () => {
   const {showModal} = useModalStore();
@@ -28,12 +28,14 @@ const MainLayout = () => {
   } = useFamilyStore();
   const {isShowBottomBar, setIsNewMessage} = useChatStore();
   const chatRef = firebase.database().ref(`chat/${familyId}/messages`);
+  // const {showNotification} = useNotificationStore()
 
   // 가족 데이터 저장 Api
   const saveFamilyData = (familyId: string) => {
     getFamilyMemberApi(
       {familyId: familyId},
       (res) => {
+        console.log("가족 정보 조회", res.data);
         setFamilyInfo(res.data.memberFamilyInfoList);
         setFamilyName(res.data.name);
         setFamilyScore(res.data.familyScore);
@@ -42,13 +44,14 @@ const MainLayout = () => {
       (err) => {
         console.error(err);
       }
-    ).then().catch();
+    ).then().catch()
   }
 
   // 정보 불러오기 Api
   const saveMemberData = () => {
     getMyDataApi(
       (res) => {
+        console.log("내 정보 조회", res.data);
         // 스토어에 저장
         setMyInfo(res.data);
         setFamilyId(res.data.familyId);
@@ -68,9 +71,9 @@ const MainLayout = () => {
     }
     // fcm 토큰 전송 - 로컬 스토리지에 있을때는 그거 보내고, 없으면 권한 묻고 다시 보냄
     if (localStorage.getItem("fcmDeviceToken")) {
-      getPushAlarmByLocalStorageApi();
+      getPushAlarmByLocalStorageApi()
     } else {
-      requestPermission();
+      requestPermission()
     }
 
   }, []);

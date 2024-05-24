@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, NavLink, useLocation} from "react-router-dom";
-import {useMemberStore} from "@store/useMemberStore";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
+import { PiCaretLeft } from "react-icons/pi";
+import { PiBell } from "react-icons/pi";
+import { PiUserCircle } from "react-icons/pi";
+import { PiTarget } from "react-icons/pi";
+import { useMemberStore } from "@store/useMemberStore";
 import NotificationBadge from "@components/NotificationBadge";
 import {useNotificationStore} from "@store/useNotificationStore";
-import {PiCaretLeft, PiBell, PiUserCircle, PiTarget} from "react-icons/pi";
-
 
 const TopBar = () => {
   const navigate = useNavigate();
-  const {myInfo} = useMemberStore();
+  const { myInfo } = useMemberStore();
   const {showNotification} = useNotificationStore()
   const [currentRoute, setCurrentRoute] = useState('');
   const location = useLocation();
@@ -63,33 +65,33 @@ const TopBar = () => {
       {/* 뒤로 가기 버튼 */}
       <div className="top-bar__left">
         {!hideBackButton && (
-          <PiCaretLeft size={24} onClick={goBack}/>
+          <PiCaretLeft size={24} onClick={goBack} />
         )}
       </div>
 
       <div className="top-bar__right">
         {/* 미션 */}
-        <NavLink to="/mission" className={({isActive}) =>
+        <NavLink to="/mission" className={({ isActive }) =>
           isActive ? 'top-bar__right--active' : ''
         }>
-          <PiTarget size={24}/>
+          <PiTarget size={24} />
         </NavLink>
 
         {/* 알림 */}
         <NavLink to="/notification" className={({isActive}) =>
           isActive ? 'top-bar__right--active position-relative' : 'position-relative'
         }>
-          <PiBell size={24}/>
-          {showNotification && currentRoute !== "/notification" && <NotificationBadge/>}
+          <PiBell size={24} />
+          { showNotification && currentRoute !== "/notification" && <NotificationBadge />}
         </NavLink>
 
         {/* 프로필 */}
         <NavLink
           to={`/profile/${myInfo.email}`}
-          className={({isActive}) =>
+          className={({ isActive }) =>
             isActive ? 'top-bar__right--active' : ''
           }>
-          <PiUserCircle size={24}/>
+          <PiUserCircle size={24} />
         </NavLink>
       </div>
     </div>

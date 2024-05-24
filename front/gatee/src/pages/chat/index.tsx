@@ -1,25 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 import BubbleChat from "@pages/chat/components/BubbleChat";
 import ChatInput from "@pages/chat/components/ChatInput";
 import ChatDate from "@pages/chat/components/ChatDate";
-import {ChatContent, ChatDateLine, ChatType, ChatSendMessage} from "@type/index";
-import {useFamilyStore} from "@store/useFamilyStore";
-import {useMemberStore} from "@store/useMemberStore";
+import { ChatContent, ChatDateLine, ChatType, ChatSendMessage } from "@type/index";
+import { useFamilyStore } from "@store/useFamilyStore";
+import { useMemberStore } from "@store/useMemberStore";
 import getUserInfo from "@utils/getUserInfo";
 import Loading from "@components/Loading";
+import { FaArrowDown } from "react-icons/fa";
 import ScrollAnimation from "@assets/images/animation/scroll_animation.json";
 import useObserver from "@hooks/useObserver";
-import {FaArrowDown} from "react-icons/fa";
-import Lottie from "lottie-react";
+
 import SockJS from "sockjs-client";
 import firebase from "../../firebase-config";
 import 'firebase/database';
-import {useInView} from 'react-intersection-observer';
-
+import { useInView } from 'react-intersection-observer';
+import Lottie from "lottie-react";
 
 const ChatIndex = () => {
-  const {REACT_APP_API_URL} = process.env;
+  const { REACT_APP_API_URL } = process.env;
   const navigate = useNavigate();
 
   const WS_URL: string = `${REACT_APP_API_URL}/chat`;
@@ -31,8 +32,8 @@ const ChatIndex = () => {
   let reconnectAttempts: number = 0;
   const [isReconnecting, setIsReconnecting] = useState<boolean>(false);
 
-  const {familyId, familyInfo} = useFamilyStore();
-  const {myInfo} = useMemberStore();
+  const { familyId, familyInfo } = useFamilyStore();
+  const { myInfo } = useMemberStore();
 
   const PAGE_SIZE: number = 30;
   const chatRef = firebase.database().ref(`chat/${familyId}/messages`);
@@ -49,7 +50,7 @@ const ChatIndex = () => {
   const [isShowPreviewMessage, setIsShowPreviewMessage] = useState<boolean>(false);
   const [previewMessage, setPreviewMessage] = useState<{ sender: string | undefined, content: string } | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const {ref, inView} = useInView();
+  const { ref, inView } = useInView();
 
   useEffect(() => {
     // WebSocket 연결
@@ -109,6 +110,8 @@ const ChatIndex = () => {
 
   // WebSocket 연결 성공 이벤트 핸들러
   const handleWebSocketOpen = () => {
+    console.log("<<< WS CONNECT");
+
     // 연결 성공 시 변수 초기화
     reconnectTimeInterval = Math.random() * MAX_TIME_INTERVAL;
     reconnectAttempts = 0;
@@ -119,17 +122,19 @@ const ChatIndex = () => {
   const handleWebSocketClose = (event: CloseEvent) => {
     // 소켓 정상 종료 여부 판별
     if (event.wasClean) {
+      console.log(">>> WS DISCONNECT");
       return;
     }
 
     // 소켓이 정상 종료되지 않았다면
     // 재연결 요청 횟수 증가
     reconnectAttempts++;
-
+    
     // 지수 백오프
     reconnectTimeInterval *= 2;
 
     if (!isReconnecting && reconnectAttempts <= MAX_RECONNECT_ATTEMPTS) {
+      console.log("WS RECONNECTING...");
       setIsReconnecting(true);
 
       setTimeout(() => {
@@ -138,6 +143,7 @@ const ChatIndex = () => {
       }, reconnectTimeInterval);
     } else {
       // 최대 횟수에 도달하면 재연결 시도를 중단하고 메인 페이지로 이동
+      console.log("Reached maximum reconnection attempts");
       navigate("/main");
     }
   };
@@ -147,6 +153,8 @@ const ChatIndex = () => {
     if (ws.current) {
       ws.current.send(JSON.stringify(newMessages));
       scrollToBottom();
+    } else {
+      console.log("WebSocket is not open or reconnecting");
     }
   };
 
@@ -169,7 +177,7 @@ const ChatIndex = () => {
         const messagesArray: (ChatContent | ChatDateLine)[] = [];
 
         snapshot.forEach((childSnapshot) => {
-          const newMessage = {id: childSnapshot.key, ...childSnapshot.val()};
+          const newMessage = { id: childSnapshot.key, ...childSnapshot.val() };
           if (messagesArray.length > 0 && newMessage.messageType === ChatType.DATE_LINE && messagesArray[0].messageType === ChatType.DATE_LINE) {
           } else {
             messagesArray.unshift(newMessage);
@@ -207,7 +215,7 @@ const ChatIndex = () => {
   };
 
   // 스크롤 타겟
-  const {target} = useObserver({
+  const { target } = useObserver({
     fetcher: loadMessages,
     dependency: messages,
     isLoading
@@ -215,7 +223,7 @@ const ChatIndex = () => {
 
   // 메시지 추가 이벤트 수신 핸들러
   const handleAddChatData = (snapshot: firebase.database.DataSnapshot) => {
-    const newMessage: ChatContent | ChatDateLine = {id: snapshot.key, ...snapshot.val()};
+    const newMessage: ChatContent | ChatDateLine = { id: snapshot.key, ...snapshot.val() };
     setMessages(prevMessages => [newMessage, ...prevMessages]);
 
     // 메시지 프리뷰 설정
@@ -248,7 +256,7 @@ const ChatIndex = () => {
 
   // 메시지 수정 이벤트 수신 핸들러
   const handleUpdateChatData = (snapshot: any) => {
-    const updatedMessage = {id: snapshot.key, ...snapshot.val()};
+    const updatedMessage = { id: snapshot.key, ...snapshot.val() };
 
     // messages 배열에서 변경된 채팅 메시지를 찾아서 업데이트
     setMessages((prevMessages) => prevMessages.map((message: ChatContent | ChatDateLine) => {
@@ -271,7 +279,7 @@ const ChatIndex = () => {
   // 스크롤 맨 아래로 내리기
   const scrollToBottom = () => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({behavior: 'smooth'});
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
       setPreviewMessage(null);
     }
   };
@@ -279,9 +287,9 @@ const ChatIndex = () => {
   // 이전 채팅과 현재 채팅의 보낸 사람이 같은지 여부에 따라 props 설정
   const setPrevProps = (prevChat: ChatContent, currentChat: ChatContent) => {
     if (prevChat) {
-      return {isPrevSender: prevChat.sender === currentChat.sender};
+      return { isPrevSender: prevChat.sender === currentChat.sender };
     }
-    return {isPrevSender: false};
+    return { isPrevSender: false };
   };
 
   // 채팅 버블 렌더링
@@ -310,8 +318,8 @@ const ChatIndex = () => {
   return (
     <div className="chat">
       {/*로딩*/}
-      {isReconnecting ? <Loading/> : null}
-
+      {isReconnecting? <Loading/> : null}
+      
       {/*메시지 없을 경우*/}
       {isNoMessage && (
         <div className="chat__no-message">가족들과 대화를 나눠 보세요 ♪</div>
@@ -324,21 +332,21 @@ const ChatIndex = () => {
 
         {/*채팅 하단 영역*/}
         <div ref={ref} className="chat__main__bottom"></div>
-
+        
         {/*채팅 내용*/}
         {renderChatBubble}
 
-        {(isShowDateLine && messages) &&
-          <ChatDate chat={{
-            id: "",
-            messageType: ChatType.DATE_LINE,
-            currentTime: dateLine,
-          }}/>
+        { (isShowDateLine && messages) &&
+            <ChatDate chat={{
+              id: "",
+              messageType: ChatType.DATE_LINE,
+              currentTime: dateLine,
+            }}/>
         }
 
         {/*DB에 더 불러올 데이터가 존재하고 데이터가 페이지 크기를 넘어갔을 때 표시*/}
         {(!isGetAllData && messages.length >= PAGE_SIZE - 1) && (
-          <div className="scroll-target" ref={target}>
+          <div className="scroll-target" ref={target} >
             <Lottie className="scroll-target__animation" animationData={ScrollAnimation}/>
           </div>
         )}

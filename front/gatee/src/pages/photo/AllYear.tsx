@@ -1,30 +1,31 @@
 import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
-import {MonthYearPhotoTabProps} from "@type/index";
-import {getThumbnailPhotoApi} from "@api/photo";
 import {useFamilyStore} from "@store/useFamilyStore";
+import {getThumbnailPhotoApi} from "@api/photo";
+import {MonthYearPhotoTabProps} from "@type/index";
 import {usePhotoStore} from "@store/usePhotoStore";
 
 
-const AllYear = () => {
-  const {familyId} = useFamilyStore();
-  const {yearThumbnailPhotoGroup, setYearThumbnailPhotoGroup} = usePhotoStore();
 
+
+const AllYear = () => {
+  const {familyId} = useFamilyStore()
+  const {yearThumbnailPhotoGroup,setYearThumbnailPhotoGroup} = usePhotoStore()
   // 월별 불러오기
   const getMonthThumnailPhotoApiFunc = () => {
     // 월별 사진 조회
     getThumbnailPhotoApi({familyId: familyId, filter: "YEAR"},
       res => {
-        setYearThumbnailPhotoGroup(res.data);
+        console.log(res)
+        setYearThumbnailPhotoGroup(res.data)
       },
       err => {
-        console.log(err);
+        console.log(err)
       })
   }
   useEffect(() => {
-    getMonthThumnailPhotoApiFunc();
+    getMonthThumnailPhotoApiFunc()
   }, [])
-
   return (
     <div className="year-photo-container">
       {/* 주어진 데이터 정렬로 return */}

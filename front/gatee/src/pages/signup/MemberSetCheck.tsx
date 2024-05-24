@@ -1,15 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {useLocation, useNavigate} from "react-router-dom";
-import {IoIosCamera} from "react-icons/io";
-import {useMemberStore} from "@store/useMemberStore";
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
+import { IoIosCamera } from "react-icons/io";
+import { useMemberStore } from "@store/useMemberStore";
 import {createFamilyApi, createMemberApi, createFamilyCodeApi, joinFamilyApi} from "@api/member";
-import {AxiosResponse, AxiosError} from "axios";
-import {useFamilyStore} from "@store/useFamilyStore";
+import { AxiosResponse, AxiosError } from "axios";
+import { useFamilyStore } from "@store/useFamilyStore";
 import dayjs from 'dayjs';
 import ProfileCropper from "@pages/profile/components/Cropper";
 import useModal from "@hooks/useModal";
-import {modifyProfileImageApi} from "@api/profile";
-import {imageResizer} from "@utils/imageResizer";
+import { modifyProfileImageApi } from "@api/profile";
+import { imageResizer } from "@utils/imageResizer";
 import base64 from "base-64";
 import Loading from "@components/Loading";
 
@@ -21,7 +21,7 @@ const SignupMemberSetCheck = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const accessToken: string | null = localStorage.getItem("accessToken");
 
-  const {isOpen, openModal, closeModal} = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const {
     name,
     role,
@@ -46,23 +46,28 @@ const SignupMemberSetCheck = () => {
   // 권한에 따라 redirect
   useEffect(() => {
     if (accessToken) {
-      const payload: string = accessToken.substring(accessToken.indexOf('.') + 1, accessToken.lastIndexOf('.'));
+      const payload: string = accessToken.substring(accessToken.indexOf('.')+1,accessToken.lastIndexOf('.'));
       const decode = base64.decode(payload);
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
+        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyName) {
+          alert('먼저 가족을 소개해주세요!');
           navigate(`/signup/family-set`);
         } else {
           if (!name) {
+            alert('먼저 이름을 입력해주세요!');
             navigate(`/signup/member-set`);
           } else {
             if (!birth) {
+              alert('먼저 생일을 입력해주세요!');
               navigate(`/signup/member-set/birth`);
             } else {
               if (!role) {
+                alert('먼저 역할을 입력해주세요!');
                 navigate(`/signup/member-set/role`);
               }
             }
@@ -81,7 +86,7 @@ const SignupMemberSetCheck = () => {
   const goToMemberSetPermission = () => {
     // 로딩 시작
     changeLoading();
-
+    
     // 코드 여부에 따라 동작 변경
     if (familyCode) {
       joinFamily();
@@ -93,7 +98,7 @@ const SignupMemberSetCheck = () => {
   // 가족 생성하기
   const createFamily = (): void => {
     const formData = new FormData();
-    // 파일이 업로드 되어 있으면 파일 이어붙이기
+    // 파일이 업로드 되어있으면 파일 이어붙이기
     if (familyImage instanceof File) {
       formData.append("file", familyImage);
     }
@@ -104,14 +109,15 @@ const SignupMemberSetCheck = () => {
     createFamilyApi(
       formData,
       (res: AxiosResponse<any>) => {
+        console.log(res);
         setFamilyId(res.data.familyId);
 
         // 회원 생성
         createMember(res.data.familyId);
       },
       (err: AxiosError<any>) => {
-        console.log(err);
-        alert("에러가 발생했습니다.\n다시 로그인해 보실래요?");
+        console.log(err)
+        alert("에러가 발생했습니다.\n다시 로그인해보실래요?");
         navigate("/kakao");
       }
     ).then().catch();
@@ -124,11 +130,12 @@ const SignupMemberSetCheck = () => {
         familyCode: familyCode
       },
       (res: AxiosResponse<any>) => {
+        console.log(res);
         createMember(familyId);
       },
       (err: AxiosError<any>) => {
         console.log(err);
-        alert("에러가 발생했습니다.\n다시 로그인해 보실래요?");
+        alert("에러가 발생했습니다.\n다시 로그인해보실래요?");
         navigate("/kakao");
       }
     ).then().catch();
@@ -148,20 +155,20 @@ const SignupMemberSetCheck = () => {
           phoneNumber: null
         },
         (res: AxiosResponse<any>) => {
+          console.log("멤버 등록 성공", res);
           // 토큰 갱신
           const accessToken = res.headers.authorization.split(' ')[1];
           localStorage.setItem("accessToken", accessToken);
+          console.log(accessToken)
         },
         (err: AxiosError<any>): void => {
           console.log(err);
-          alert("에러가 발생했습니다.\n다시 입력해 보실래요?");
+          alert("에러가 발생했습니다.\n다시 입력해보실래요?");
           navigate("/signup/member-set/check");
         }
       ).then(
         // 이미지 수정
-        () => {
-          modifyProfileImage()
-        }
+        () => {modifyProfileImage()}
       ).catch();
     }
   }
@@ -180,6 +187,8 @@ const SignupMemberSetCheck = () => {
     modifyProfileImageApi(
       formData,
       (res: AxiosResponse<any>) => {
+        console.log("이미지 수정 성공", res);
+
         // 패밀리 코드가 있다면 바로 가입축하로 넘기기
         if (familyCode) {
           navigate(`/signup/member-set/finish`, {
@@ -194,7 +203,7 @@ const SignupMemberSetCheck = () => {
       },
       (err: AxiosError<any>) => {
         console.log(err);
-        alert("에러가 발생했습니다.\n다시 입력해 보실래요?");
+        alert("에러가 발생했습니다.\n다시 입력해보실래요?");
         navigate("/signup/member-set/check");
       }
     )
@@ -207,6 +216,7 @@ const SignupMemberSetCheck = () => {
         familyId: familyId,
       },
       (res: AxiosResponse<any>) => {
+        console.log("코드 생성 성공", res);
         // 가족 코드 집어넣기
         setFamilyCode(res.data.familyCode);
         navigate("/signup/member-set/share", {
@@ -217,7 +227,7 @@ const SignupMemberSetCheck = () => {
       },
       (err: AxiosError<any>): void => {
         console.log(err);
-        alert("에러가 발생했습니다.\n다시 입력해 보실래요?");
+        alert("에러가 발생했습니다.\n다시 입력해보실래요?");
         navigate("/signup/member-set/check");
       }
     ).then().catch();
@@ -233,11 +243,9 @@ const SignupMemberSetCheck = () => {
     const file: File | null = e.target.files ? e.target.files[0] : null;
     if (file) {
       const resizedFile: File = (await imageResizer(file, 2000, 2000)) as File;
-
       // 크롭할 이미지 넣기
       const jpgUrl = URL.createObjectURL(resizedFile);
       setCropImage(jpgUrl);
-
       // 모달 열기
       openModal();
     }
