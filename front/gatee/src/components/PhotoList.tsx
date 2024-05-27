@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import Checkbox from '@mui/material/Checkbox';
 import {PhotoListProps, PhotoData} from "@type/index";
+import Checkbox from '@mui/material/Checkbox';
 
 
 // 채팅 앨범과 모든 사진의 일별 사진, 월별 연별 앨범 사진 상세페이지에서 활용됨
@@ -18,12 +18,12 @@ const PhotoList = ({editMode, photoGroup, handleChecked}: PhotoListProps) => {
   )
 }
 
-const PhotoItem = ({ photoData, editMode, handleChecked }: PhotoListProps & { photoData: PhotoData }) => {
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+const PhotoItem = ({photoData, editMode, handleChecked}: PhotoListProps & { photoData: PhotoData }) => {
+  const label = {inputProps: {'aria-label': 'Checkbox demo'}};
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
-  const clickPhotoItem = (id:string|number) => {
+  const clickPhotoItem = (id: string | number) => {
     if (editMode === 'normal') {
       navigate(`/photo/${id}`);
     } else {
@@ -37,12 +37,12 @@ const PhotoItem = ({ photoData, editMode, handleChecked }: PhotoListProps & { ph
     if (handleChecked) {
       // 체크박스가 체크 되어있다면 리스트에서 id를 제거하고 체크를 푼다
       if (checked) {
-        handleChecked(photoData.photoId,"delete")
+        handleChecked(photoData.photoId, "delete")
         setChecked(false)
       }
       // 체크박스가 체크 되어있지 않다면, 리스트에 id를 추가하고 체크를 한다
       else {
-        handleChecked(photoData.photoId,"add")
+        handleChecked(photoData.photoId, "add")
         setChecked(true)
       }
     }
@@ -52,9 +52,9 @@ const PhotoItem = ({ photoData, editMode, handleChecked }: PhotoListProps & { ph
   useEffect(() => {
     setChecked(false)
   }, [editMode]);
-  
+
   return (
-    <div onClick={()=>clickPhotoItem(photoData.photoId)} className="photo__item">
+    <div onClick={() => clickPhotoItem(photoData.photoId)} className="photo__item">
       {editMode !== 'normal' && editMode !== 'editName' &&
         <Checkbox {...label} className="check-box"
                   checked={checked}

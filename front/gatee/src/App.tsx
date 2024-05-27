@@ -14,21 +14,20 @@ const App = () => {
     messaging = firebase.messaging();
   }
 
-  
+
   let url = "/main"
 
   // 메세지 받기
   if (firebase.messaging.isSupported() && messaging !== undefined)
     messaging.onMessage((payload) => {
-      console.log(payload.notification)
-      const notificationData = payload.notification
+      const notificationData = payload.notification;
       const notificationTitle = payload.notification.title;
       if (notificationTitle.includes("채팅")) {
-        url = "/chatting"
+        url = "/chatting";
       } else if (notificationTitle.includes("사진")) {
-        url = "/photo/day"
+        url = "/photo/day";
       } else if (notificationTitle.includes("한마디")) {
-        url = "/notification"
+        url = "/notification";
       }
 
       setNotificationPopUp({
@@ -45,7 +44,7 @@ const App = () => {
       if (notificationPopUp.title.includes("채팅")) {
       }
       else if(location.pathname !== "/notification") {
-        setShowNotification(true)
+        setShowNotification(true);
       }
     }
   }, [notificationPopUp]);

@@ -18,11 +18,9 @@ const SignupFamilyJoinCheck = () => {
       const json = JSON.parse(decode);
 
       if (json.authorities[0] === "ROLE_ROLE_USER") {
-        alert(`잘못된 접근입니다.`);
         navigate(`/main`);
       } else {
         if (!familyCode) {
-          alert(`먼저 코드를 입력해 주세요!`)
           navigate(`/signup/family-join`);
         }
       }
