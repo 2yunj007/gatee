@@ -1,5 +1,6 @@
 import React from 'react';
-import { IoShareOutline } from "react-icons/io5";
+import {IoShareOutline} from "react-icons/io5";
+
 
 const Ios = () => {
   return (
@@ -18,7 +19,7 @@ const Ios = () => {
             </span>
           </span>
           <span className="text--02">
-            &nbsp;로 빠른 앱 실행을 해보세요!
+            &nbsp;로 빠른 앱 실행을 해 보세요!
           </span>
         </div>
       </div>

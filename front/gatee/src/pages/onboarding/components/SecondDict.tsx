@@ -2,8 +2,8 @@ import React from 'react';
 import Explain2 from "@assets/images/onboarding/explain2.png"
 import {Link} from "react-router-dom";
 
-const SecondDict = () => {
 
+const SecondDict = () => {
   return (
     <div className={"slider__container"}>
 
@@ -18,7 +18,7 @@ const SecondDict = () => {
         <img src={Explain2} width={200} alt=""/>
       </div>
 
-      {/* 건너 뛰기 */}
+      {/* 건너뛰기 */}
       <div className="buttonContainer">
         <Link to="/kakao" className="skipButton">
           건너뛰기

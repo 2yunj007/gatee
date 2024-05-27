@@ -72,9 +72,9 @@ export const deletePhotoApi = async function (data: DeletePhotoApiReq,
 
 // 사진 삭제
 export const deleteDetailPhotoApi = async function (data: string|number,
-                                              familyId:string,
-                                              success: (res: AxiosResponse<any>) => void,
-                                              fail: (err: AxiosError<any>) => void) {
+                                                    familyId:string,
+                                                    success: (res: AxiosResponse<any>) => void,
+                                                    fail: (err: AxiosError<any>) => void) {
   await local.delete(`photos/${data}`,{params:familyId}).then(success).catch(fail);
 }
 // 앨범 삭제
@@ -96,8 +96,6 @@ export const updateAlbumNameApi = async function (data: UpdateAlbumNameApiReq,
 export const uploadAlbumPhotoApi = async function (data: UploadAlbumPhotoApiReq,
                                                    success: (res: AxiosResponse<any>) => void,
                                                    fail: (err: AxiosError<any>) => void) {
-  console.log(`albums/${data.albumId}/photos`)
-  console.log(`photoIdList: ${data.photoIdList}`)
   await local.post(`albums/${data.albumId}/photos`, {photoIdList: data.photoIdList}).then(success).catch(fail);
 }
 
@@ -110,8 +108,8 @@ export const deleteAlbumPhotoApi = async function (data: UploadAlbumPhotoApiReq,
 
 // 사진 상호작용 생성
 export const createReactionPhotoApi = async function (data: string|number,
-                                                success: (res: AxiosResponse<any>) => void,
-                                                fail: (err: AxiosError<any>) => void) {
+                                                      success: (res: AxiosResponse<any>) => void,
+                                                      fail: (err: AxiosError<any>) => void) {
   await local.post(`photos/${data}/reaction`).then(success).catch(fail);
 }
 
@@ -121,3 +119,4 @@ export const deleteReactionPhotoApi = async function (data: string|number,
                                                       fail: (err: AxiosError<any>) => void) {
   await local.delete(`photos/${data}/reaction`).then(success).catch(fail);
 }
+

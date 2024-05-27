@@ -2,17 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {TransformedQuestionData} from "@type/index";
 
 interface QuestionItemTakingProps {
-  chooseValue: (questionNumber:number,value:number) => void,
-  handleNextIndex: (questionNumber:number,value:number) => void,
-  handleBeforeIndex: (questionNumber:number,value:number) => void,
+  chooseValue: (questionNumber: number, value: number) => void,
+  handleNextIndex: (questionNumber: number, value: number) => void,
+  handleBeforeIndex: (questionNumber: number, value: number) => void,
   questionNumber: number,
   questionItem: TransformedQuestionData
-  myAnswerList:number[]
+  myAnswerList: number[]
 }
 
 
 const QuestionItemTaking = (
-  {chooseValue,
+  {
+    chooseValue,
     questionItem,
     questionNumber,
     handleBeforeIndex
@@ -23,20 +24,20 @@ const QuestionItemTaking = (
   const [selected, setSelected] = useState(myAnswerList[questionNumber]);
 
   const handleAnswer = (value: number) => {
-    chooseValue(questionNumber,value)
-    setSelected(value)
+    chooseValue(questionNumber, value);
+    setSelected(value);
   }
 
   const submitNextIndex = () => {
-    handleNextIndex(questionNumber,selected)
+    handleNextIndex(questionNumber, selected);
   }
 
   const submitBeforeIndex = () => {
-    handleBeforeIndex(questionNumber,selected)
+    handleBeforeIndex(questionNumber, selected);
   }
-  // 문제 번호가 변경될때마다 선택된값을 변경해준다
+  // 문제 번호가 변경될 때마다 선택된 값을 변경
   useEffect(() => {
-    setSelected(myAnswerList[questionNumber])
+    setSelected(myAnswerList[questionNumber]);
 
   }, [questionNumber]);
 
@@ -44,7 +45,7 @@ const QuestionItemTaking = (
     <div className="exam__item">
       {/* 문제 */}
       <div className="exam__item__question">
-        {questionNumber+1}. {questionItem?.nickname}{questionItem?.question}
+        {questionNumber + 1}. {questionItem?.nickname}{questionItem?.question}
       </div>
 
       {/* 객관식 */}
@@ -82,7 +83,7 @@ const Button = ({questionIndex, handleBeforeIndex, submitNextIndex}: any) => {
   return (
     <div className="exam__taking__footer">
 
-      {/* 이전 버튼 1번일때는 안보임 */}
+      {/* 이전 버튼 1번일 때는 안 보임 */}
       {questionIndex > 0 ?
         <button onClick={handleBeforeIndex} className="nextButton">
           이전
@@ -90,7 +91,7 @@ const Button = ({questionIndex, handleBeforeIndex, submitNextIndex}: any) => {
         : <div></div>
       }
 
-      {/* 다음 버튼 - 마지막일때는 완료로 보임 */}
+      {/* 다음 버튼 - 마지막일 때는 완료로 보임 */}
       <button onClick={submitNextIndex} className="nextButton">
         {questionIndex >= 9 ?
           <> 완료</> :
