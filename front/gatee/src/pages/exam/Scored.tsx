@@ -45,12 +45,12 @@ const ExamScored = () => {
               />)})}
 
 
-            {/* 하단의 줄 두개 */}
+            {/* 하단의 줄 두 개 */}
             <div className="exam__scored-footer">
             </div>
 
             <Link to="/exam/grade" className="exam__scored--goto-grade">
-              가족 성적표 보러가기
+              가족 성적표 보러 가기
             </Link>
           </>
       }
