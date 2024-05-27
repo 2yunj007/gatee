@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import dayjs from "dayjs";
+import {ChatAppointment, MemberApiReq} from "@type/index";
+import {getAppointmentParticipantsApi, applyAppointmentParticipationApi} from "@api/chat";
+import {useFamilyStore} from "@store/useFamilyStore";
+import {useMemberStore} from "@store/useMemberStore";
+import {useChatStore} from "@store/useChatStore";
+import getUserInfo from "@utils/getUserInfo";
+import MegaphoneIcon from "@assets/images/icons/ic_megaphone.png";
+import {FaRegHandPaper} from "react-icons/fa";
 import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import dayjs from "dayjs";
-import MegaphoneIcon from "@assets/images/icons/ic_megaphone.png";
-import { FaRegHandPaper } from "react-icons/fa";
-import { ChatAppointment, MemberApiReq } from "@type/index";
-import getUserInfo from "@utils/getUserInfo";
-import { useFamilyStore } from "@store/useFamilyStore";
-import { useMemberStore } from "@store/useMemberStore";
-import { useChatStore } from "@store/useChatStore";
-import { getAppointmentParticipantsApi, applyAppointmentParticipationApi } from "@api/chat";
+
 
 interface ChatAppointmentProps {
   chat: ChatAppointment;
 }
 
 const BubbleChatAppointment = (props: ChatAppointmentProps) => {
-  const { chat } = props;
-  const { familyInfo } = useFamilyStore();
-  const { myInfo } = useMemberStore();
-  const { isUserParticipant, setIsUserParticipant } = useChatStore();
-  const [participants, setParticipants] = useState<string[]>([])
+  const {chat} = props;
+  const {familyInfo} = useFamilyStore();
+  const {myInfo} = useMemberStore();
+  const {isUserParticipant, setIsUserParticipant} = useChatStore();
+  const [participants, setParticipants] = useState<string[]>([]);
   const newIsUserParticipant: boolean = isUserParticipant[chat.appointmentId];
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
@@ -65,14 +66,13 @@ const BubbleChatAppointment = (props: ChatAppointmentProps) => {
   // 참여자 정보 콜백 함수
   const getParticipantsInfo = (id: string, index: number) => {
     const userInfo: null | MemberApiReq = getUserInfo(familyInfo, id);
-
     return <Avatar src={userInfo?.profileImageUrl} alt={userInfo?.nickname} key={index}/>;
   }
-  
+
   // 참여자 리스트 갱신
   useEffect(() => {
     if (!isUserParticipant[chat.appointmentId]) {
-      setIsUserParticipant(chat.appointmentId, participants.includes(myInfo.memberId))
+      setIsUserParticipant(chat.appointmentId, participants.includes(myInfo.memberId));
     }
   }, [participants]);
 
@@ -87,29 +87,29 @@ const BubbleChatAppointment = (props: ChatAppointmentProps) => {
 
 
   return (
-    <Card className="bubble-appointment" variant="outlined" sx={{ borderRadius: 3 }}>
+    <Card className="bubble-appointment" variant="outlined" sx={{borderRadius: 3}}>
       <div className="bubble-appointment__info">
         {/*확성기 아이콘*/}
         <div className="bubble-appointment__icon">
-          <img src={ MegaphoneIcon } alt="Megaphone Icon"/>
+          <img src={MegaphoneIcon} alt="Megaphone Icon"/>
         </div>
 
         <div className="bubble-appointment__info-wrapper">
           {/*날짜*/}
           <div className="bubble-appointment__date">
-            { dayjs(chat.currentTime).format("M월 D일") }
+            {dayjs(chat.currentTime).format("M월 D일")}
           </div>
 
           {/*참여자 리스트*/}
           <AvatarGroup max={4} className="bubble-appointment__participants">
-            { participants.map(getParticipantsInfo) }
-          </AvatarGroup >
+            {participants.map(getParticipantsInfo)}
+          </AvatarGroup>
         </div>
       </div>
 
       {/*내용*/}
       <div className="bubble-appointment__message">
-        { chat.content }
+        {chat.content}
       </div>
 
       {/* 참여자 여부 또는 버튼 렌더링 */}

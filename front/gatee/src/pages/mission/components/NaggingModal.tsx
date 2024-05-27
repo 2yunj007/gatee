@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {MemberApiRes, NotificationRes} from "@type/index";
+import {naggingApi} from "@api/notification";
+import {InputAdornment} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {IoSend} from "react-icons/io5";
-import {InputAdornment} from "@mui/material";
-import {naggingApi} from "@api/notification";
 
 
 const MissionNaggingModal = ({memberInfo, handleModal}: {
@@ -12,9 +12,10 @@ const MissionNaggingModal = ({memberInfo, handleModal}: {
 }) => {
 
   // 한마디 보내기 버튼 누르기 상태 관리
-  const [isSendBtnClicked, setIsSendBtnClicked] = useState(false);
-// 메세지 입력 상태
-  const [messageInput, setMessageInput] = useState("");
+  const [isSendBtnClicked, setIsSendBtnClicked] = useState<boolean>(false);
+
+  // 메세지 입력 상태
+  const [messageInput, setMessageInput] = useState<string>("");
 
 
 // 메세지 상태 저장
@@ -46,19 +47,16 @@ const MissionNaggingModal = ({memberInfo, handleModal}: {
         "receiverId": memberInfo?.memberId,
         "message": messageInput
       }, res => {
-        console.log(res.data)
-
       }, err => {
-        console.log(err)
+        console.log(err);
       })
-    handleModal()
+    handleModal();
   }
 
   return (
     <div className="nagging-modal-bg" onClick={() => handleModal()}>
       <div className="nagging-modal-content--container" onClick={(e) => e.stopPropagation()}>
         <h2 className="nagging-modal-title">{memberInfo?.nickname}님에게</h2>
-        {/*<p className="nagging-modal-content"></p>*/}
 
         <div className="nagging-modal-btn-container">
           {isSendBtnClicked ? null :

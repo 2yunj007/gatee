@@ -1,22 +1,19 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import dayjs, { Dayjs } from 'dayjs';
-
+import React, {useRef, useState, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import dayjs, {Dayjs} from 'dayjs';
 import {DateSelectArg, DayCellContentArg, EventSourceInput} from '@fullcalendar/core'
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
+import interactionPlugin, {DateClickArg} from "@fullcalendar/interaction";
 import googleCalendarPlugin from "@fullcalendar/google-calendar";
-
 import DayToast from "@pages/schedule/components/DayToast";
-import { getAllScheduleApi } from "@api/schedule";
-import { useFamilyStore } from "@store/useFamilyStore";
+import {getAllScheduleApi} from "@api/schedule";
+import {useFamilyStore} from "@store/useFamilyStore";
 import {ScheduleListRes} from "@type/index";
 import getColorCode from "@utils/getColorCode";
-import { ScheduleType } from "@type/index";
-
-import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
+import {ScheduleType} from "@type/index";
+import {FaCaretLeft, FaCaretRight} from "react-icons/fa";
+import {FaPlus} from "react-icons/fa6";
 
 
 const ScheduleIndex = () => {
@@ -30,7 +27,7 @@ const ScheduleIndex = () => {
   const [isShowTodayButton, setIsShowTodayButton] = useState<boolean>(false);
   const [selectedStartDate, setSelectedStartDate] = useState<string>(dayjs().format("YYYY-MM-DD"));
   const [selectedEndDate, setSelectedEndDate] = useState<string>(dayjs().format("YYYY-MM-DD"));
-  const { familyId} = useFamilyStore();
+  const {familyId} = useFamilyStore();
 
   const [scheduleList, setScheduleList] = useState<ScheduleListRes[]>([]);
   const [dayScheduleList, setDayScheduleList] = useState<ScheduleListRes[]>([]);
@@ -46,7 +43,7 @@ const ScheduleIndex = () => {
       setCurrentDate(calendarDate);
     }
   }, []);
-  
+
   // 월 업데이트
   useEffect(() => {
     setCurrentMonth(currentDate.getMonth() + 1);
@@ -122,8 +119,8 @@ const ScheduleIndex = () => {
   const handleCreateScheduleClick = () => {
     // 선택한 영역을 query string으로 전송
     navigate({
-        pathname: '/schedule/create',
-        search: `?start=${selectedStartDate}&end=${selectedEndDate}`,
+      pathname: '/schedule/create',
+      search: `?start=${selectedStartDate}&end=${selectedEndDate}`,
     });
   }
 
@@ -199,12 +196,12 @@ const ScheduleIndex = () => {
 
     return (
       <div className="schedule-calendar__day" style={{color: arg.isToday ? "white" : ""}}>
-        { dayNumber }
-        { arg.isToday
+        {dayNumber}
+        {arg.isToday
           &&
           <div className="schedule-calendar__today"></div>
         }
-        { isEvent && eventOnDate && (
+        {isEvent && eventOnDate && (
           <div className="schedule-calendar__event-icon">
             <img src={getColorCode(eventOnDate.emoji).image} alt="ic_calendar"/>
           </div>
@@ -215,13 +212,13 @@ const ScheduleIndex = () => {
 
   // event content render hooks
   const useEventContent = (arg: { event: any }) => {
-    const { event } = arg;
+    const {event} = arg;
     const eventInfo = event.id.split("&");
 
     if (eventInfo[0] === ScheduleType.GROUP) {
       return (
         <div className="schedule-calendar__group">
-          { event.title }
+          {event.title}
         </div>
       );
     } else if (eventInfo[0] === ScheduleType.PERSONAL) {
@@ -236,9 +233,9 @@ const ScheduleIndex = () => {
         return (
           <div className="schedule-calendar__personal">
             <div className="schedule-calendar__personal__profile">
-              <img src={profileImageUrl} alt="Profile" />
+              <img src={profileImageUrl} alt="Profile"/>
             </div>
-            { event.title }
+            {event.title}
           </div>
         );
       }
@@ -301,7 +298,7 @@ const ScheduleIndex = () => {
           <div className="schedule-calendar__year">
             {currentDate.getFullYear()}
           </div>
-          
+
           <div className="schedule-calendar__title-wrapper">
             {/*이전 달 전환 버튼*/}
             <button className="schedule-calendar__button-month left" onClick={() => handleMonthChange(-1)}>
@@ -347,7 +344,7 @@ const ScheduleIndex = () => {
         />
 
         {/* 오늘 날짜 이동 버튼*/}
-        { isShowTodayButton && (
+        {isShowTodayButton && (
           <button className="schedule-calendar__button-today" onClick={handleTodayClick}>
             <span>오늘</span>
           </button>
@@ -355,12 +352,12 @@ const ScheduleIndex = () => {
 
         {/*이벤트 추가 버튼*/}
         <button className="schedule-calendar__button-add-event" onClick={handleCreateScheduleClick}>
-          <FaPlus size={22} />
+          <FaPlus size={22}/>
         </button>
       </div>
 
       {/*일자별 일정 리스트*/}
-      <DayToast date={selectedDate} schedules={dayScheduleList} onCloseClick={handleDayClose} />
+      <DayToast date={selectedDate} schedules={dayScheduleList} onCloseClick={handleDayClose}/>
     </div>
   );
 };

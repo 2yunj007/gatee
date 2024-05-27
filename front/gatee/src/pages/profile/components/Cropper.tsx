@@ -1,9 +1,9 @@
-import React, { useState , useCallback } from 'react';
-import Cropper, { Area, Point } from 'react-easy-crop';
-import { useFamilyStore } from "@store/useFamilyStore";
-import { useMemberStore } from "@store/useMemberStore";
+import React, {useState, useCallback} from 'react';
+import Cropper, {Area, Point} from 'react-easy-crop';
+import {useFamilyStore} from "@store/useFamilyStore";
+import {useMemberStore} from "@store/useMemberStore";
 import getCroppedImage from "@utils/getCroppedImage";
-import { imageResizer } from "@utils/imageResizer";
+import {imageResizer} from "@utils/imageResizer";
 
 const ProfileCropper = (props: {
   cropImage: string,
@@ -11,15 +11,15 @@ const ProfileCropper = (props: {
   handleModalEvent: () => void,
   sender: string
 }) => {
-  const { cropImage, cropShape, handleModalEvent, sender } = props;
-  const { setFamilyImage, setStringImage, setInputImage, setInputStringImage } = useFamilyStore();
-  const { setMemberImage, setStringMemberImage, setMyInfo } = useMemberStore();
+  const {cropImage, cropShape, handleModalEvent, sender} = props;
+  const {setFamilyImage, setStringImage, setInputImage, setInputStringImage} = useFamilyStore();
+  const {setMemberImage, setStringMemberImage, setMyInfo} = useMemberStore();
 
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = useState(1)
+  const [crop, setCrop] = useState<{ x: number; y: number }>({x: 0, y: 0});
+  const [zoom, setZoom] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-  // 크롭조정
+  // 크롭 조정
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }
@@ -37,7 +37,7 @@ const ProfileCropper = (props: {
       // Blob을 File로 변환
       const fileName = "croppedImage.jpg";
       const lastModified = new Date().getTime();
-      const file = new File([blob], fileName, { type: "image/jpeg", lastModified });
+      const file = new File([blob], fileName, {type: "image/jpeg", lastModified});
       const resizedFile: File = (await imageResizer(file, 500, 500)) as File;
       const jpgUrl = URL.createObjectURL(resizedFile);
 
@@ -108,17 +108,17 @@ const ProfileCropper = (props: {
         />
 
         <div className="profile-cropper__btn">
-              <button
-              className="btn-cancel"
-              onClick={handleCancel}
-              >
+          <button
+            className="btn-cancel"
+            onClick={handleCancel}
+          >
               <span className="btn-cancel--text">
               취소
               </span>
-              </button>
-              <button
-              className="btn-save"
-              onClick={handleSave}
+          </button>
+          <button
+            className="btn-save"
+            onClick={handleSave}
           >
           <span className="btn-save--text">
             저장
