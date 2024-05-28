@@ -44,7 +44,7 @@ public class PushNotificationController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public PushNotificationPageRes readNotifications(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                     @PageableDefault(size=4) Pageable pageable,
+                                                     @PageableDefault Pageable pageable,
                                                      // default size : 10
                                                      @RequestParam(required = false) String cursor) {
         return notificationService.readNotifications(customUserDetails.getMemberId(), pageable, cursor);
