@@ -11,9 +11,9 @@ spring:
         - db-prod
         - security-prod
       batch:
-        - db-local
+        - db-prod
         - batch-prod
-        - security-local
+        - security-prod
       test:
         - db-prod
         - security-prod

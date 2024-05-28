@@ -31,7 +31,7 @@ public class CustomPushNotificationRepositoryImpl implements CustomPushNotificat
 
         query.addCriteria(Criteria.where("receiver_id").is(receiverId)).with(pageable);
         if (!isNull(cursor) && !cursor.isEmpty()) {
-            query.addCriteria(Criteria.where("_id").gt(new ObjectId(cursor)));
+            query.addCriteria(Criteria.where("_id").lt(new ObjectId(cursor)));
         }
         query.with(Sort.by(Sort.Direction.DESC, "_id"));
         List<PushNotificationRes> pushNotification = mongoTemplate.find(query, PushNotifications.class)
