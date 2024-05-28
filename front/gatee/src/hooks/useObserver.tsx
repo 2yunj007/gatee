@@ -18,7 +18,6 @@ const useObserver = (options: ObserverOptions) => {
 
     // 타겟 존재하고 데이터를 불러오는 중이 아닐 때
     if (target.current && !isLoading) {
-
       // IntersectionObserver 생성자 할당
       observer = new IntersectionObserver(onIntersect);
 
@@ -27,7 +26,7 @@ const useObserver = (options: ObserverOptions) => {
     }
     // 언마운트 시 연결 해제
     return () => observer && observer.disconnect();
-  }, [dependency]);
+  }, [dependency, isLoading]);
 
   // observer가 타켓을 관찰할 때 추가 데이터를 가져오는 fetcher()를 실행
   const onIntersect = (entries: IntersectionObserverEntry[]) => {

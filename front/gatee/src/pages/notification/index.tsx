@@ -36,9 +36,7 @@ const NotificationIndex = () => {
   const {isOpen: isFeatureModalOpen, openModal: openFeatureModal, closeModal: closeFeatureModal} = useModal();
 
   // MUI 관련 코드 -> 슬라이드 다운 해서 내리기 기능 가능
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-      (event: React.KeyboardEvent | React.MouseEvent) => {
+  const toggleDrawer = (anchor: Anchor, open: boolean) =>(event: React.KeyboardEvent | React.MouseEvent) => {
         if (open === true) {
           setShowModal(true);
         } else {
@@ -75,17 +73,16 @@ const NotificationIndex = () => {
     </Box>
   );
 
-  const navigate = useNavigate()
-  // 모달 상태 적용
-  const {setShowModal} = useModalStore()
+  const navigate = useNavigate();
+  const {setShowModal} = useModalStore();
   const {notificationPopUp, setShowNotification} = useNotificationStore();
   const [hasNext, setHasNext] = useState<boolean>(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [clickedNotification, setClickedNotification] = useState<NotificationRes | null | undefined>(null)
-  const [isLoading, setLoading] = useState<boolean>(false)
-  const [isGetAllData, setIsGetAllData] = useState<boolean | null>(null);
-  // 알림 데이터 리스트
-  const {notificationDataList, setNotificationDataList, setNotificationChecked} = useNotificationStore()
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isGetAllData, setIsGetAllData] = useState<boolean>(false);
+  const {notificationDataList, setNotificationDataList, setNotificationChecked} = useNotificationStore();
+  const [isCallNextData, setIsCallNextData] = useState<boolean>(false);
 
   // 읽음 처리
   const handleReadNotification = (id: string, isCheck: boolean) => {
@@ -103,7 +100,7 @@ const NotificationIndex = () => {
           if (clicked?.type !== "NAGGING" && clicked?.type !== "FEATURE")
             navigate(getUrlFromType(clicked?.type, clicked?.typeId));
 
-          // 이동 안할때는 상태 업데이트(css) 변경
+          // 이동 안 할 때는 상태 업데이트(css) 변경
           setNotificationChecked(id);
         }
         , err => {
@@ -120,11 +117,8 @@ const NotificationIndex = () => {
     closeFeatureModal();
   }
 
-  // 스크롤
-  const nextScroll = () => {
-    setLoading(true);
-
-    if (nextCursor && hasNext) {
+  useEffect(() => {
+    if (nextCursor && isCallNextData) {
       getNotificationListNextApi(nextCursor,
         res => {
           // 배열 추가
@@ -135,26 +129,38 @@ const NotificationIndex = () => {
           setHasNext(res.data.hasNext);
           setNextCursor(res.data.nextCursor);
           setIsGetAllData(!res.data.hasNext);
-          setLoading(false);
+          setIsCallNextData(false);
         }, err => {
           console.log(err);
+          setIsCallNextData(false);
         })
     }
+  }, [nextCursor, isCallNextData]);
+
+  // 스크롤
+  const nextScroll = () => {
+    setLoading(true);
+    setIsCallNextData(true);
   }
+
   const {target} = useObserver({
     fetcher: nextScroll,
     dependency: notificationDataList,
-    isLoading
+    isLoading: isCallNextData
   })
 
+  useEffect(() => {
+  }, [target.current]);
+
   const getNotificationListFirstApiFunc = () => {
+    if (isLoading) return;
+
     setShowNotification(false);
 
     getNotificationListFirstApi(
       res => {
         setNotificationDataList(res.data.pushNotificationResList);
         setHasNext(res.data.hasNext);
-        setIsGetAllData(!res.data.hasNext);
         setNextCursor(res.data.nextCursor);
       }, err => {
         console.log(err);
@@ -201,11 +207,12 @@ const NotificationIndex = () => {
           return <NotificationItem key={index} notificationData={item} handleReadNotification={handleReadNotification}/>
         })}
 
-        {isGetAllData === false && (
+        {(!isGetAllData && notificationDataList.length >= 10) && (
           <div className="scroll-target" ref={target}>
             <Lottie className="scroll-target__animation" animationData={ScrollAnimation}/>
           </div>
         )}
+
       </div>
       {isGetAllData ?
         <div className="notification-scroll-finish-explain">
@@ -226,10 +233,7 @@ const NotificationIndex = () => {
 };
 
 // 알림 아이템
-const NotificationItem = ({notificationData, handleReadNotification}: {
-  notificationData: NotificationRes,
-  handleReadNotification: (id: string, isCheck: boolean) => void
-}) => {
+const NotificationItem = ({notificationData, handleReadNotification}: { notificationData: NotificationRes, handleReadNotification: (id: string, isCheck: boolean) => void }) => {
   const today = dayjs();
   const notificationDate = dayjs(notificationData.createdAt);
 
