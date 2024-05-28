@@ -15,7 +15,6 @@ import {FiBook} from "react-icons/fi";
 
 
 const MainIndex = () => {
-  // const {setMyInfo} = useMemberStore()
   const {setMyInfo} = useMemberStore()
   const {
     familyInfo,
@@ -52,20 +51,6 @@ const MainIndex = () => {
     );
   }
 
-  // 미션 저장 api
-  const getMissionApiFunc = () => {
-    setIsGetMissionDate(false);
-    getMissionApi({familyId: familyId},
-      res => {
-        setMissionList(res.data.missionListResList);
-        setIsGetMissionDate(true);
-      },
-      err => {
-        console.log(err);
-        setIsGetMissionDate(true);
-      }
-    )
-  }
   // 정보 불러오기 Api
   const saveMemberData = () => {
     setIsGetMemberDate(false);
@@ -87,7 +72,6 @@ const MainIndex = () => {
 
   useEffect(() => {
     saveMemberData();
-    getMissionApiFunc();
   }, []);
 
   useEffect(() => {
